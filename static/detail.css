@@ -29,7 +29,7 @@ a:active {
 }
 
 .home img {
-    width: 120px;
+    width: 200px;
 }
 
 .main {
@@ -41,7 +41,6 @@ a:active {
 
 .wb_image {
     border-radius: 10%;
-    background-image: url("https://shared-comic.pstatic.net/thumb/webtoon/747269/thumbnail/thumbnail_IMAG06_baed4a4a-c499-419e-a48e-26d360b07b31.jpg");
     background-position: center;
     background-size: cover;
 
@@ -80,6 +79,6 @@ a:active {
     max-width: 700px;
 }
 
-.user_name{
+.user_name {
     font-weight: bold;
 }
