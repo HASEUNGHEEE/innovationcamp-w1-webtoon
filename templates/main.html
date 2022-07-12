@@ -63,7 +63,7 @@
                 height: 400px;
 
                 background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url("https://otakukart.com/wp-content/uploads/2021/04/featured-webtoon.jpg");
-                backgroung-size: cover;
+                background-size: cover;
                 background-position: center;
 
                 color: white;
@@ -113,12 +113,13 @@
                     data: {},
                     success: function (response) {
                         let rows = response['webtoons']
-                        for (let i = 0; i < rows.length; i++) {
+                        for (let i = Math.floor(Math.random() * rows.length); i < rows.length; i++) {
                             {#let title = rows[i]['title']#}
                             let image = rows[i]['image']
                             {#let url = rows[i]['url']#}
                             {#let desc = rows[i]['desc']#}
                             {#let comment = rows[i]['comment']#}
+                            Math.floor(Math.random() * rows.length)
 
                             let temp_html = `<div class="col">
                                                 <div class="card">
@@ -248,26 +249,6 @@
         <!---------------------- 기록 카드 ---------------------->
         <div class="mycards">
             <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4">
-                <div class="col">
-                    <div class="card">
-                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/796152/thumbnail/thumbnail_IMAG19_80e8b206-87f3-4c7f-8913-daf4cf6bcdea.jpg" class="card-img-top" alt="...">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/748105/thumbnail/thumbnail_IMAG19_d8bd40f2-76f6-448b-8650-126c0d5137b6.jpg" class="card-img-top" alt="...">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/758037/thumbnail/thumbnail_IMAG19_67290a02-fe7f-448d-aed9-6ec88e558088.jpg" class="card-img-top" alt="...">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/762073/thumbnail/thumbnail_IMAG19_1976e314-b676-4ff5-a23b-b6605a7b7403.jpg" alt="...">
-                    </div>
-                </div>
             </div>
         </div>
     </body>

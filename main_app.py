@@ -1,4 +1,4 @@
-import jwt
+# import jwt
 # import hashlib
 # from werkzeug.utils import secure_filename
 
@@ -46,21 +46,21 @@ def posting():
 
         doc = {
             # "user_id": user_info["username"],
-            "webtoon_image": image,
-            "webtoon_url": url_receive,
+            "image": image,
+            "url": url_receive,
             "comment": comment_receive,
-            "comment_star": star_receive
+            "star": star_receive
         }
-        db.t_comment.insert_one(doc)
+        db.t_webtoon.insert_one(doc)
 
-        return jsonify({"result": "success", 'msg': '포스팅 성공'})
+        return jsonify({"result": "success", 'msg': '포스팅 완료'})
     # except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
     #     return redirect(url_for("home"))
 
 
 @app.route("/webtoon", methods=['GET'])
 def listing():
-    webtoon_list = list(db.t_comment.find({}, {'_id': False}))
+    webtoon_list = list(db.t_webtoon.find({}, {'_id': False}).limit(4))
     return jsonify({'webtoons': webtoon_list})
     # token_receive = request.cookies.get('mytoken')
     # try:
