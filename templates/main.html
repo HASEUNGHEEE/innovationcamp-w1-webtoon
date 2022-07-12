@@ -113,13 +113,12 @@
                     data: {},
                     success: function (response) {
                         let rows = response['webtoons']
-                        for (let i = Math.floor(Math.random() * rows.length); i < rows.length; i++) {
+                        for (let i = 0; i < rows.length; i++) {
                             {#let title = rows[i]['title']#}
                             let image = rows[i]['image']
                             {#let url = rows[i]['url']#}
                             {#let desc = rows[i]['desc']#}
                             {#let comment = rows[i]['comment']#}
-                            Math.floor(Math.random() * rows.length)
 
                             let temp_html = `<div class="col">
                                                 <div class="card">
