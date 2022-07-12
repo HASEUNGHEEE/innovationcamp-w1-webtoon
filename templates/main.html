@@ -1,0 +1,225 @@
+<!Doctype html>
+<html lang="en">
+
+    <head>
+        <!-- webpage title -->
+        <title>인생네툰</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bulma CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+        <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+
+        <!-- JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+
+        <!-- Google font -->
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+
+        <!-- style -->
+        <style type="text/css">
+            * {
+                font-family: 'Noto Sans KR', sans-serif;
+            }
+             .mycards {
+                margin: 80px auto 0px auto;
+                width: 95%;
+                max-width: 900px;
+            }
+            .wrap {
+                max-width: 900px;
+                width: 95%;
+                margin: auto;
+            }
+
+            .comment {
+                color: blue;
+                font-weight: bold;
+            }
+
+            #post-box {
+                width: 500px;
+                margin: 20px auto;
+                padding: 50px;
+                border: black solid;
+                border-radius: 5px;
+            }
+            .mytitle {
+                width: 100%;
+                height: 300px;
+
+                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url("https://otakukart.com/wp-content/uploads/2021/04/featured-webtoon.jpg");
+                backgroung-size: cover;
+                background-position: center;
+
+                color: white;
+                font-weight: 700;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            .mytitle > button {
+                width: 200px;
+                height: 50px;
+
+                background-color: transparent;
+                color: white;
+
+                border-radius: 50px;
+
+                border: 1px solid white;
+
+                margin-top: 10px;
+            }
+            .mytitle > button:hover {
+                border: 3px solid hsl(141, 53%, 53%);
+                background-color: hsl(141, 53%, 53%);
+                color: white;
+            }
+
+        </style>
+        <script>
+            $(document).ready(function () {
+                showArticles();
+            });
+
+            function openClose() {
+                if ($("#post-box").css("display") == "block") {
+                    $("#post-box").hide();
+                    $("#btn-post-box").text("포스팅 박스 열기");
+                } else {
+                    $("#post-box").show();
+                    $("#btn-post-box").text("포스팅 박스 닫기");
+                }
+            }
+
+            function postArticle() {
+                let url = $('#post-url').val()
+                let comment = $('#post-comment').val()
+
+                $.ajax({
+                    type: "POST",
+                    url: "/memo",
+                    data: {url_give:url, comment_give:comment},
+                    success: function (response) { // 성공하면
+                        alert(response["msg"]);
+                        window.location.reload()
+                    }
+                })
+            }
+
+            function showArticles() {
+                $.ajax({
+                    type: "GET",
+                    url: "/memo",
+                    data: {},
+                    success: function (response) {
+                        let articles = response['all_articles']
+                        for (let i = 0; i < articles.length; i++) {
+                            let title = articles[i]['title']
+                            let image = articles[i]['image']
+                            let url = articles[i]['url']
+                            let desc = articles[i]['desc']
+                            let comment = articles[i]['comment']
+
+                            let temp_html = `<div class="card">
+                                                <img class="card-img-top"
+                                                     src="${image}"
+                                                     alt="Card image cap">
+                                                <div class="card-body">
+                                                    <a target="_blank" href="${url}" class="card-title">${title}</a>
+                                                    <p class="card-text">${desc}</p>
+                                                    <p class="card-text comment">${comment}</p>
+                                                </div>
+                                            </div>`
+                            $('#cards-box').append(temp_html)
+                        }
+                    }
+                })
+            }
+            function logout() {
+                window.location.href="/logout"
+            }
+            function mypage() {
+                window.location.href="/mypage"
+            }
+        </script>
+
+    </head>
+
+    <body>
+    <!---------------------- navbar ---------------------->
+        <nav class="navbar is-white" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                 <a class="navbar-item" href="/">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Naver_Line_Webtoon_logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                    <img src="static/logo.png" alt="">
+                 </a>
+
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="field is-grouped">
+                        <p class="control">
+                            <button onclick="mypage()" class="bd-tw-button button">
+                                <span>
+                                    마이페이지
+                                </span>
+                            </button>
+                        </p>
+                        <p class="control">
+                            <button onclick="logout()" class="button is-success">
+                                <span>로그아웃</span>
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="mytitle">
+            <h1></h1>
+            <button onclick="open_box()"><h5>기록하기</h5></button>
+        </div>
+
+        <div class="mycards">
+            <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col">
+                    <div class="card">
+                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/796152/thumbnail/thumbnail_IMAG19_80e8b206-87f3-4c7f-8913-daf4cf6bcdea.jpg" class="card-img-top" alt="...">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/748105/thumbnail/thumbnail_IMAG19_d8bd40f2-76f6-448b-8650-126c0d5137b6.jpg" class="card-img-top" alt="...">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/758037/thumbnail/thumbnail_IMAG19_67290a02-fe7f-448d-aed9-6ec88e558088.jpg" class="card-img-top" alt="...">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/762073/thumbnail/thumbnail_IMAG19_1976e314-b676-4ff5-a23b-b6605a7b7403.jpg" alt="...">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
