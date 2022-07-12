@@ -12,18 +12,13 @@ db = client.dbwebtoon
 def main():
     return render_template('main.html')
 
-# 파라미터
-# @app.route('/detail/<title>')
-# def detail(title):
-#     return render_template('detail.html', title=title)
-
 # 더미 글읽기페이지
 # detail 페이지 response가 이걸로 들어감..주의!!
-# @app.route('/detail_page')
+# @app.route('/detail')
 # def detail():
 #     return render_template('detail.html')
 
-# 글 읽기 화면 웹툰별로 t_webtoon 데이터 가져오기
+# 뷰어화면 웹툰별 데이터 가져오기
 @app.route("/detail/<keyword>")
 def info_get(keyword):
     target_webtoon = db.t_webtoon.find_one({'name': keyword}, {'_id': False})
@@ -31,12 +26,12 @@ def info_get(keyword):
     return render_template("detail.html", title=keyword, result=result)
 
 
-# 해당 웹툰 코멘트
-@app.route("/detail/<keyword>")
-def comment_get(keyword):
-    key = request.form.get['name']
-    comment_lists = db.t_webtoon.find_one({'name': key}, {'_id': False})
-    return jsonify({'comment_list': comment_lists})
+# 뷰어화면 해당 웹툰 코멘트
+# @app.route("/detail/<keyword>")
+# def comment_get(keyword):
+#     key = request.form.get['name']
+#     comment_lists = db.t_webtoon.find_one({'name': key}, {'_id': False})
+#     return jsonify({'comment_list': comment_lists})
 
 
 
