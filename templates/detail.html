@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>인생네툰</title>
+
+    <link href="/static/detail.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+{#    <script>#}
+{#        $(document).ready(function () {#}
+{#            get_info();#}
+{#            show_comment();#}
+{#        });#}
+{##}
+        {#파라미터 제목 저장한거 불러오기#}
+{##}
+{#        function get_info() {#}
+{#            $.ajax({#}
+{#                type: 'GET',#}
+{#                url: '/detail',#}
+{#                data: {},#}
+{#                success: function (response) {#}
+{#                    let rows = response['webtoon_lists']#}
+{#                    for (i = 0; i < rows.length; i++) {#}
+{#                        if (rows[i]['name'] ===  ) {  {#파라미터 제목과 일치한다면~#}
+{#                            let name = rows[i]['name']#}
+{#                            let genre = rows[i]['genre']#}
+{#                            let writer = rows[i]['writer']#}
+{#                            let desc = rows[i]['desc']#}
+{#                            let image = rows[i]['image']#}
+{#                            let url = rows[i]['url']#}
+{##}
+{#                            let temp_html = `<div class="wb_image" style="background-image: url("${image}")"></div>#}
+{#                                            <div class="info">#}
+{#                                                <span class="title">#}
+{#                                                    <a href="${url}">${name}</a>#}
+{#                                                </span>#}
+{#                                                <span class="writer">${writer}</span>#}
+{#                                                <p>${genre}</p>#}
+{#                                                <p>${desc}</p>#}
+{#                                            </div>`#}
+{#                            $('#info-box').append(temp_html)#}
+{#                        }#}
+{#                    }#}
+{##}
+{#                }#}
+{#            })#}
+{#        }#}
+{##}
+{#        function show_comment() {#}
+{#            $.ajax({#}
+{#                type: "GET",#}
+{#                url: "/detail",#}
+{#                data: {name:},   {# 파라미터 제목~ #}
+{#                success: function (response) {#}
+{#                    let rows = response['comment']#}
+{#                    for (let i = 0; i < rows.length; i++) {#}
+{#                        let u_id = rows[i]['user_id'];#}
+{#                        let comment = rows[i]['comment'];#}
+{##}
+                        {# user 개인 페이지 url #}
+{##}
+{#                        let temp_html = `<div class="item">#}
+{#                                                <p class="user_name">#}
+{#                                                    <a href="user 개인 페이지">#}
+{#                                                        ${u_id}#}
+{#                                                    </a>#}
+{#                                                </p>#}
+{#                                                <p class="comment">#}
+{#                                                    ${comment}#}
+{#                                                </p>#}
+{#                                            </div>`#}
+{##}
+{#                        $('#comment-list').append(temp_html)#}
+{#                    }#}
+{#                }#}
+{#            });#}
+{#        }#}
+{#    </script>#}
+
+</head>
+<body>
+<div class="header">
+    <div class="home">
+        <a href="/" style="width: 0; height: 0; display: inline-block;">
+            <img src="/static/lifewebtoon2.png"/>
+        </a>
+    </div>
+</div>
+<div class="main">
+    <div class="wb_image" style="background-image: url( {{ result.image }} )"></div>
+    <div class="info">
+        <span class="title">
+            <a href="{{ result.url }}">{{ title }}</a>
+        </span>
+        <span class="writer">{{ result.writer }}</span>
+        <p>{{ result.genre }}</p>
+        <p>'이건 내가 아는 그 전개다'<br>한순간에 세계가 멸망하고, 새로운 세상이 펼쳐졌다.<br>오직 나만이 완주했던 소설 세계에서 평범했던 독자의 새로운 삶이 시작된다.</p>
+    </div>
+</div>
+<div class="container">
+    <div id="comment-list">
+        <div class="item">
+            <p class="user_name">
+                <a href="user 개인 페이지">
+                    mediumorange
+                </a>
+            </p>
+            <p class="comment">
+                '이건 내가 아는 그 전개다' 한순간에 세계가 멸망하고, 새로운 세상이 펼쳐졌다. 오직 나만이 완주했던 소설 세계에서 평범했던 독자의 새로운 삶이 시작된다.
+            </p>
+        </div>
+        <div class="item">
+            <p class="user_name">
+                <a href="user 개인 페이지">
+                    aaaaaa
+                </a>
+            </p>
+            <p class="comment">
+                그냥저냥 재밌음 어쩌구 저쩌구
+            </p>
+        </div>
+        <div class="item">
+            <p class="user_name">
+                <a href="user 개인 페이지">
+                    test
+                </a>
+            </p>
+            <p class="comment">
+                '이건 내가 아는 그 전개다' 한순간에 세계가 멸망하고, 새로운 세상이 펼쳐졌다. 오직 나만이 완주했던 소설 세계에서 평범했던 독자의 새로운 삶이 시작된다.'이건 내가 아는 그 전개다'
+                한순간에 세계가 멸망하고, 새로운 세상이 펼쳐졌다. 오직 나만이 완주했던 소설 세계에서 평범했던 독자의 새로운 삶이 시작된다.'이건 내가 아는 그 전개다' 한순간에 세계가 멸망하고,
+                새로운 세상이 펼쳐졌다. 오직 나만이 완주했던 소설 세계에서 평범했던 독자의 새로운 삶이 시작된다.
+            </p>
+        </div>
+        <div class="item">
+            <p class="user_name">
+                <a href="user 개인 페이지">
+                    sparta
+                </a>
+            </p>
+            <p class="comment">
+                '이건 내가 아는 그 전개다' 한순간에 세계가 멸망하고, 새로운 세상이 펼쳐졌다. 오직 나만이 완주했던 소설 세계에서 평범했던 독자의 새로운 삶이 시작된다.'이건 내가 아는 그 전개다'
+                한순간에 세계가 멸망하고, 새로운 세상이 펼쳐졌다. 오직 나만이 완주했던 소설 세계에서 평범했던 독자의 새로운 삶이 시작된다.
+            </p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
