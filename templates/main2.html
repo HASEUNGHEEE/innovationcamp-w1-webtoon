@@ -1,0 +1,274 @@
+<!Doctype html>
+<html lang="en">
+
+    <head>
+        <!-- webpage title -->
+        <title>인생네툰</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bulma CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+        <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
+
+        <!-- JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+
+        <!-- Google font -->
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+
+        <!-- style -->
+        <style type="text/css">
+            * {
+                font-family: 'Noto Sans KR', sans-serif;
+            }
+             .mycards {
+                margin: 80px auto 0px auto;
+                width: 95%;
+                max-width: 900px;
+            }
+            .wrap {
+                max-width: 900px;
+                width: 95%;
+                margin: auto;
+            }
+
+            .comment {
+                color: blue;
+                font-weight: bold;
+            }
+
+            #post-box {
+                width: 500px;
+                margin: 20px auto;
+                padding: 50px;
+                border: black solid;
+                border-radius: 5px;
+            }
+            .mytitle {
+                width: 100%;
+                height: 400px;
+
+                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url("https://otakukart.com/wp-content/uploads/2021/04/featured-webtoon.jpg");
+                backgroung-size: cover;
+                background-position: center;
+
+                color: white;
+                font-weight: 700;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            .mytitle > button {
+                width: 200px;
+                height: 50px;
+
+                background-color: transparent;
+                color: white;
+
+                border-radius: 50px;
+
+                border: 1px solid white;
+
+                margin-top: 10px;
+            }
+            .mytitle > button:hover {
+                border: 3px solid hsl(141, 53%, 53%);
+                background-color: hsl(141, 53%, 53%);
+                color: white;
+            }
+            a {
+                text-decoration: none;
+            }
+
+            .modal-content {
+                width: 600px;
+                max-width: 80%;
+            }
+        </style>
+        <script>
+            $(document).ready(function () {
+                showWebtoons();
+            });
+
+            function showWebtoons() {
+                $.ajax({
+                    type: "GET",
+                    url: "/webtoon",
+                    data: {},
+                    success: function (response) {
+                        let rows = response['webtoons']
+                        for (let i = 0; i < rows.length; i++) {
+                            {#let title = rows[i]['title']#}
+                            let image = rows[i]['image']
+                            {#let url = rows[i]['url']#}
+                            {#let desc = rows[i]['desc']#}
+                            {#let comment = rows[i]['comment']#}
+
+                            let temp_html = `<div class="col">
+                                                <div class="card">
+                                                    <img src="${image}">
+                                                </div>
+                                            </div>`
+                            $('#cards-box').append(temp_html)
+                        }
+                    }
+                })
+            }
+
+            function postWebtoons() {
+                let url = $('#url').val()
+                let star = $('#star').val()
+                let comment = $('#comment').val()
+                $.ajax({
+                    type: "POST",
+                    url: "/webtoon",
+                    data: {url_give: url, star_give: star, comment_give: comment},
+                    success: function (response) {
+                        alert(response['msg'])
+                        $("#modal-post").removeClass("is-active")
+                        window.location.reload()
+                    }
+                })
+            }
+
+
+            function logout() {
+                window.location.href="/logout"
+            }
+            function mypage() {
+                window.location.href="/mypage"
+            }
+        </script>
+
+    </head>
+
+    <body>
+        <!---------------------- navbar ---------------------->
+        <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/">
+                    <img src="../static/lifewebtoon2.png" alt="" width="200" height="28">
+                </a>
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div class="field is-grouped">
+                                <p class="control">
+                                    <button onclick="mypage()" class="bd-tw-button button">
+                                    <span>
+                                        마이페이지
+                                    </span>
+                                    </button>
+                                </p>
+                                <p class="control">
+                                    <button onclick="logout()" class="button is-success">
+                                        <span>로그아웃</span>
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!---------------------- 기록 모달창 ---------------------->
+        <div class="mytitle">
+            <h1></h1>
+            <button onclick='$("#modal-post").addClass("is-active")'><h5>기록하기</h5></button>
+            <div class="modal" id="modal-post">
+                <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
+                <div class="modal-content">
+                    <div class="box">
+                        <article class="media">
+                            <div class="media-content">
+                                <div class="mypost" id="post-box">
+                                    <div class="form-floating mb-3">
+                                        <input id="url" type="email" class="form-control"
+                                               placeholder="name@example.com">
+                                        <label>웹툰URL</label>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <label class="input-group-text" for="inputGroupSelect01">별점</label>
+                                        <select class="form-select" id="star">
+                                            <option selected>-- 선택하기 --</option>
+                                            <option value="1">⭐</option>
+                                            <option value="2">⭐⭐</option>
+                                            <option value="3">⭐⭐⭐</option>
+                                            <option value="4">⭐⭐⭐⭐</option>
+                                            <option value="5">⭐⭐⭐⭐⭐</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-floating">
+                                        <textarea id="comment" class="form-control"
+                                                  placeholder="Leave a comment here"></textarea>
+                                        <label for="floatingTextarea2">코멘트</label>
+                                    </div>
+                                </div>
+                                <nav class="level is-mobile">
+                                    <div class="level-left">
+
+                                    </div>
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <a class="button is-sparta" onclick="postWebtoons()">포스팅하기</a>
+                                        </div>
+                                        <div class="level-item">
+                                            <a class="button is-sparta is-outlined"
+                                               onclick='$("#modal-post").removeClass("is-active")'>취소</a>
+                                        </div>
+                                    </div>
+                                </nav>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <button class="modal-close is-large" aria-label="close"
+                        onclick='$("#modal-post").removeClass("is-active")'></button>
+            </div>
+        </div>
+
+        <!---------------------- 기록 카드 ---------------------->
+        <div class="mycards">
+            <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col">
+                    <div class="card">
+                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/796152/thumbnail/thumbnail_IMAG19_80e8b206-87f3-4c7f-8913-daf4cf6bcdea.jpg" class="card-img-top" alt="...">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/748105/thumbnail/thumbnail_IMAG19_d8bd40f2-76f6-448b-8650-126c0d5137b6.jpg" class="card-img-top" alt="...">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/758037/thumbnail/thumbnail_IMAG19_67290a02-fe7f-448d-aed9-6ec88e558088.jpg" class="card-img-top" alt="...">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <img src="https://shared-comic.pstatic.net/thumb/webtoon/762073/thumbnail/thumbnail_IMAG19_1976e314-b676-4ff5-a23b-b6605a7b7403.jpg" alt="...">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
