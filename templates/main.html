@@ -18,7 +18,7 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
 
-        <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
 
         <!-- JS -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -60,7 +60,7 @@
             }
             .mytitle {
                 width: 100%;
-                height: 300px;
+                height: 400px;
 
                 background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url("https://otakukart.com/wp-content/uploads/2021/04/featured-webtoon.jpg");
                 backgroung-size: cover;
@@ -91,6 +91,9 @@
                 border: 3px solid hsl(141, 53%, 53%);
                 background-color: hsl(141, 53%, 53%);
                 color: white;
+            }
+            a {
+                text-decoration: none;
             }
 
         </style>
@@ -165,13 +168,13 @@
 
     <body>
     <!---------------------- navbar ---------------------->
-        <nav class="navbar is-white" role="navigation" aria-label="main navigation">
+        <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                  <a class="navbar-item" href="/">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Naver_Line_Webtoon_logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-                    <img src="static/logo.png" alt="">
+                    <img src="https://velog.velcdn.com/images/ariul-dev/post/c6356acc-d97d-4b31-9412-1ac695802c03/image.png" width="95">
+                     <strong class="is-sparta"
+                                style="font-family: 'Stylish', sans-serif;font-size: larger;">인생네툰</strong>
                  </a>
-
             </div>
             <div class="navbar-end">
                 <div class="navbar-item">
