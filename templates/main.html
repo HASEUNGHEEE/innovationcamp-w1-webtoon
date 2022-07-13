@@ -1,5 +1,5 @@
 <!Doctype html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 
     <head>
         <!-- webpage title -->
@@ -12,6 +12,7 @@
         <!-- Bulma CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
         <!-- Bootstrap CSS -->
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -22,19 +23,18 @@
 
         <!-- JS -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
                 integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
                 crossorigin="anonymous"></script>
+        <!--removeCookie를 위한 jQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
         <!-- Google font -->
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
-        <!--removeCookie를 위한 jQuery -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-
         {% block css %}
         {% endblock %}
+
         <script>
             function logout() {
                 $.removeCookie('mytoken', {path: '/'});
@@ -50,10 +50,10 @@
             }
 
             $(document).ready(function () {
-                main_showWebtoons();
+                to_detailWebtoons();
             });
 
-            function main_showWebtoons() {
+            function to_detailWebtoons() {
                 $.ajax({
                     type: "GET",
                     url: "/webtoon",
@@ -92,26 +92,24 @@
                     }
                 })
             }
-
         </script>
-
     </head>
 
     <body>
         <!---------------------- navbar ---------------------->
         <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item" href="/">
-                    <img src="../static/lifewebtoon2.png" alt="" width="200" height="28">
+                <a href="/" >
+                    <img style="object-fit: cover; width: 206px; height: 70px;" src="/static/lifewebtoon2.png"/>
                 </a>
             </div>
             <div class="navbar-end">
                 <!-- 우측 상단 표시부/ 로그인 전후에 따라 기능 구분 -->
                 <div class="navbar-item">
-                    {% if userid %}<!-- 로그인 했을 시 마이페이지 가기와 로그아웃 버튼 표출 -->
+                    {% if user_id %}<!-- 로그인 했을 시 마이페이지 가기와 로그아웃 버튼 표출 -->
                     <div class="name_box">
-                        <a href="{{ url_for('user_get') }}">
-                            <button class="bd-tw-button button">{{ userid }} 마이페이지 </button>
+                        <a href="{{ url_for('mypage') }}">
+                            <button class="bd-tw-button button">{{ user_id }} 마이페이지 </button>
                         </a>
                     </div>
                     <div class="logout_box">
@@ -163,14 +161,18 @@
 
                                     </div>
                                     <div class="level-right">
+                                        <!--로그인한 유저만 기록하기 기능 사용할 수 있음-->
+                                        {% if user_id %}
                                         <div class="level-item">
                                             <a class="button is-sparta" onclick="postWebtoons()">포스팅하기</a>
                                         </div>
+                                        {% endif %}
                                         <div class="level-item">
                                             <a class="button is-sparta is-outlined"
                                                onclick='$("#modal-post").removeClass("is-active")'>취소</a>
                                         </div>
                                     </div>
+
                                 </nav>
                             </div>
                         </article>

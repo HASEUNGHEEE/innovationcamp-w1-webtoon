@@ -43,10 +43,16 @@ def posting():
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
         data = requests.get(url_receive, headers=headers)
 
-        soup = BeautifulSoup(data.text, 'html.parser')
+        soup = BeautifulSoup(data.text, "lxml")
         image = soup.select_one('meta[property="og:image"]')['content']
         name = soup.select_one('meta[property="og:title"]')['content']
-        desc = soup.select_one('meta[property="og:description"]')['content']
+
+
+        detailInfo = soup.select_one('.comicinfo > .detail')
+        desc = detailInfo.select_one('p').text.replace('<br/>', '\n')
+        genre = detailInfo.select_one('.genre').text
+        writer = detailInfo.select_one('.wrt_nm').text[8:]
+
 
         doc = {
             # "user_id": user_info["username"],
@@ -55,7 +61,9 @@ def posting():
             "comment": comment_receive,
             "star": star_receive,
             "name": name,
-            "desc": desc
+            "desc": desc,
+            "genre": genre,
+            "writer": writer
         }
         db.t_webtoon.insert_one(doc)
 
