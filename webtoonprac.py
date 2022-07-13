@@ -155,6 +155,12 @@ def check_dup():
 # 메인 글쓰기
 @app.route('/webtoon', methods=['POST'])
 def posting():
+    token_receive = request.cookies.get('mytoken')
+    if (token_receive is not None):
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        userinfo = db.t_user.find_one({"user_id": payload["id"]})
+        user_id = userinfo['user_id']
+
     url_receive = request.form['url_give']
     star_receive = request.form['star_give']
     comment_receive = request.form["comment_give"]
@@ -167,14 +173,13 @@ def posting():
     image = soup.select_one('meta[property="og:image"]')['content']
     name = soup.select_one('meta[property="og:title"]')['content']
 
-
     detailInfo = soup.select_one('.comicinfo > .detail')
     desc = detailInfo.select_one('p').text
     genre = detailInfo.select_one('.genre').text
     writer = detailInfo.select_one('.wrt_nm').text[8:]
 
     doc = {
-        # "user_id": prac1,
+        "user_id": user_id,
         "image": image,
         "url": url_receive,
         "comment": comment_receive,
@@ -220,38 +225,42 @@ def detail():
 
 @app.route('/mypage', methods=['POST'])
 def my_posting():
-    url_receive = request.form['url_give']
-    star_receive = request.form['star_give']
-    comment_receive = request.form["comment_give"]
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload["id"]
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-    data = requests.get(url_receive, headers=headers)
+        url_receive = request.form['url_give']
+        star_receive = request.form['star_give']
+        comment_receive = request.form["comment_give"]
 
-    soup = BeautifulSoup(data.text, "lxml")
-    image = soup.select_one('meta[property="og:image"]')['content']
-    name = soup.select_one('meta[property="og:title"]')['content']
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+        data = requests.get(url_receive, headers=headers)
 
+        soup = BeautifulSoup(data.text, "lxml")
+        image = soup.select_one('meta[property="og:image"]')['content']
+        name = soup.select_one('meta[property="og:title"]')['content']
+        detailInfo = soup.select_one('.comicinfo > .detail')
+        desc = detailInfo.select_one('p').text
+        genre = detailInfo.select_one('.genre').text
+        writer = detailInfo.select_one('.wrt_nm').text[8:]
 
-    detailInfo = soup.select_one('.comicinfo > .detail')
-    desc = detailInfo.select_one('p').text
-    genre = detailInfo.select_one('.genre').text
-    writer = detailInfo.select_one('.wrt_nm').text[8:]
-
-    doc = {
-        # "user_id": {{user_id}},
-        "image": image,
-        "url": url_receive,
-        "comment": comment_receive,
-        "star": star_receive,
-        "name": name,
-        "desc": desc,
-        "genre": genre,
-        "writer": writer
-    }
-    db.t_webtoon.insert_one(doc)
-
-    return jsonify({"result": "success", 'msg': '포스팅 완료'})
+        doc = {
+            "user_id": user_id,
+            "image": image,
+            "url": url_receive,
+            "comment": comment_receive,
+            "star": star_receive,
+            "name": name,
+            "desc": desc,
+            "genre": genre,
+            "writer": writer
+        }
+        db.t_webtoon.insert_one(doc)
+        return jsonify({"result": "success", 'msg': '포스팅 완료'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return render_template('index.html')
 
 @app.route("/mypage", methods=['GET'])
 def my_listing():
