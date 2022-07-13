@@ -46,6 +46,7 @@ a:active {
 #main-box {
     display: flex;
     max-width: 800px;
+    margin: 0 20px;
 }
 
 .wb_image {
@@ -58,6 +59,10 @@ a:active {
     margin-right: 50px;
 
     color: white;
+}
+
+.info {
+    max-width: 530px;
 }
 
 .title {
