@@ -78,13 +78,6 @@ def listing():
     random_list = random.sample(webtoon_list, k=4)
 
     return jsonify({'webtoons': random_list})
-    # token_receive = request.cookies.get('mytoken')
-    # try:
-    #     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    #     # 포스팅 목록 받아오기
-    #     return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다."})
-    # except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-    #     return redirect(url_for("home"))
 
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)
