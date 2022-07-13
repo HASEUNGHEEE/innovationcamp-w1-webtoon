@@ -47,7 +47,7 @@
     .mytitle {
         width: 100%;
         height: 400px;
-        background-image: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('https://otakukart.com/wp-content/uploads/2021/04/featured-webtoon.jpg');
+        background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), url('https://otakukart.com/wp-content/uploads/2021/04/featured-webtoon.jpg');
         background-position: center;
         background-size: auto;
         color: white;
@@ -160,39 +160,40 @@
                 }
             })
     }
-    function logout() {
-        $.removeCookie('mytoken', {path: '/'});
-        window.location.href="/"
-    }
+
 </script>
 </head>
 <body>
     <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="/">
-                <img src="../static/lifewebtoon2.png" alt="" width="200" height="28">
+            <a href="/">
+                <img style="object-fit: cover; width: 206px; height: 70px;" src="/static/lifewebtoon2.png"/>
             </a>
         </div>
+{#    <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">#}
+{#        <div class="navbar-brand">#}
+{#            <a class="navbar-item" href="/">#}
+{#                <img src="../static/lifewebtoon2.png" alt="" style="object-fit: cover; width: 206px; height: 70px;">#}
+{#            </a>#}
+{#        </div>#}
         <div class="navbar-end">
             <div class="navbar-item">
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <div class="field is-grouped">
-                            <p class="control">
-                                <button onclick="logout()" class="button is-success">
-                                    <span>로그아웃</span>
-                                </button>
-                            </p>
-                        </div>
-                    </div>
+                <div class="logout_box">
+                    <button class="button is-success" onclick="logout()">로그아웃</button>
                 </div>
+{#                <div class="navbar-end">#}
+{#                    <p class="control">#}
+{#                        <button onclick="logout()" class="button is-success">#}
+{#                            <span>로그아웃</span>#}
+{#                        </button>#}
+{#                    </p>#}
+{#                </div>#}
             </div>
         </div>
     </nav>
 
     <div class="mytitle">
         <h1 style="margin-top: 50px;">{{user_id}}의 인생네툰</h1>
-
         <button onclick='$("#modal-post").addClass("is-active")'>
             <h5>기록하기</h5>
         </button>

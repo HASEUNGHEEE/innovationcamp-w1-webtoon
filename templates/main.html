@@ -95,7 +95,7 @@
         </script>
     </head>
 
-    <body>
+    <div>
         <!---------------------- navbar ---------------------->
         <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
@@ -106,20 +106,24 @@
             <div class="navbar-end">
                 <!-- 우측 상단 표시부/ 로그인 전후에 따라 기능 구분 -->
                 <div class="navbar-item">
-                    {% if user_id is defined %}
-                    <div class="name_box">
-                        <a href="/mypage">
-                            <button class="bd-tw-button button">{{ user_id }} 마이페이지 </button>
-                        </a>
+                    <div class="field is-grouped">
+                        <p class="control">
+                            {% if user_id is defined %}
+                            <div class="name_box">
+                                <a href="/mypage">
+                                    <button class="bd-tw-button button">{{ user_id }} 마이페이지 </button>
+                                </a>
+                            </div>
+                            <div class="logout_box">
+                                <button class="button is-success" onclick="logout()">로그아웃</button>
+                            </div>
+                            {% else %}
+                            <div class="name_box">
+                                <button class="bd-tw-button button" onclick="login()">로그인</button>
+                            </div>
+                            {% endif %}
+                        </p>
                     </div>
-                    <div class="logout_box">
-                        <button class="button is-success" onclick="logout()">로그아웃</button>
-                    </div>
-                    {% else %}
-                    <div class="name_box">
-                        <button class="bd-tw-button button" onclick="login()">로그인</button>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
         </nav>
