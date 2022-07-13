@@ -1,0 +1,26 @@
+
+.title {
+    color: white;
+    font-weight: 800;
+    font-size: 5rem;
+    font-family: 'Song Myung', sans-serif;
+}
+
+.subtitle {
+    font-family: 'Song Myung', cursive;
+    font-size: 2rem;
+
+}
+
+.help {
+    color: gray;
+}
+
+
+.hero-body {
+    background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Plum_trees_Kitano_Tenmangu.jpg/1200px-Plum_trees_Kitano_Tenmangu.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 350px;
+}
