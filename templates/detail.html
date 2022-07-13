@@ -6,6 +6,8 @@
     <title>인생네툰</title>
 
     <link href="/static/detail.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script>
@@ -20,7 +22,7 @@
             re_desc = re_desc.replace(/&#39;/g, "'")
             re_desc = re_desc.replace(/&#34;/g, '"')
 
-            let temp_html = `<p>${re_desc}</p>`
+            let temp_html = `<p style="font-weight: 10px ">${re_desc}</p>`
             $('.info').append(temp_html)
         }
     </script>
@@ -53,7 +55,7 @@
             {% set us_comment = cmt.comment %}
             <div class="item">
                 <p class="user_name">
-                    <a href="user 개인 페이지">
+                    <a href="/mypage/{{ us_id }}">
                         {{ us_id }}
                     </a>
                 </p>
