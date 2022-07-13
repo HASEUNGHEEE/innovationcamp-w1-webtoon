@@ -33,7 +33,12 @@
 
     <script>
         $(document).ready(function () {
-
+            if ("{{ msg }}".length !== 0) {
+                Swal.fire({
+                    icon: 'error',
+                    text: '{{msg}}'
+                });
+            }
         })
 
         const Toast_success = Swal.mixin({
@@ -54,7 +59,7 @@
 
             Swal.fire({
                 icon: 'question',
-                text:'로그아웃 하시겠습니까?',
+                text: '로그아웃 하시겠습니까?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: 'Yes',
@@ -67,7 +72,6 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire('로그아웃!', '', 'success')
                     $.removeCookie('mytoken', {path: '/'});
                     setTimeout(function () {
                         window.location.href = "/login"
@@ -80,7 +84,23 @@
 
 
     </script>
+    <style>
+        body::-webkit-scrollbar {
+            width: 15px; /* 스크롤바의 너비 */
+        }
 
+        body::-webkit-scrollbar-thumb {
+            height: 30%; /* 스크롤바의 길이 */
+            background: hsl(141, 53%, 53%); /* 스크롤바의 색상 */
+
+            border-radius: 10px;
+        }
+
+        body::-webkit-scrollbar-track {
+            background: white; /*스크롤바 뒷 배경 색상*/
+        }
+
+    </style>
 </head>
 <body class="has-navbar-fixed-top">
 <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
@@ -93,10 +113,10 @@
             <strong class="is-sparta"
                     style="font-family: 'Stylish', sans-serif;font-size: larger;">로그아웃</strong>
         </a>
-        <div class="navbar-end" >
+        <div class="navbar-end">
             <div class="navbar-item">
                 <a><strong class="is-sparta"
-                        style="font-family: 'Stylish', sans-serif;font-size: larger;">{{ user_id }}님 환영합니다.</strong></a>
+                           style="font-family: 'Stylish', sans-serif;font-size: larger;">{{ user_id }}님 환영합니다.</strong></a>
             </div>
         </div>
     </div>
