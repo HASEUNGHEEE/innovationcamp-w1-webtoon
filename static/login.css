@@ -18,9 +18,25 @@
 
 
 .hero-body {
-    background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Plum_trees_Kitano_Tenmangu.jpg/1200px-Plum_trees_Kitano_Tenmangu.jpg);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     height: 350px;
 }
+
+
+body::-webkit-scrollbar {
+    width: 15px; /* 스크롤바의 너비 */
+}
+
+body::-webkit-scrollbar-thumb {
+    height: 30%; /* 스크롤바의 길이 */
+    background: hsl(141, 53%, 53%); /* 스크롤바의 색상 */
+
+    border-radius: 10px;
+}
+
+body::-webkit-scrollbar-track {
+    background: white; /*스크롤바 뒷 배경 색상*/
+}
+
