@@ -1,22 +1,23 @@
 from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
+
 import requests
 from bs4 import BeautifulSoup
-from pymongo import MongoClient
 
-client = MongoClient('mongodb+srv://test:sparta@cluster0.clgy5.mongodb.net/Cluster0?retryWrites=true&w=majority')
+from pymongo import MongoClient
+client = MongoClient('mongodb+srv://test:sparta@cluster0.clgy5.mongodb.net/cluster0?retryWrites=true&w=majority')
 db = client.dbwebtoon
 
 
 @app.route('/')
 def main():
-    return render_template("main.html")
+    return render_template('main.html')
 
 
 @app.route('/mypage')
 def detail():
     username = "username1"
-    return render_template("mypage.html", name=username)
+    return render_template('mypage.html', name=username)
 
 
 if __name__ == '__main__':
@@ -47,7 +48,7 @@ def posting():
             "star": star_receive,
             "comment": comment_receive,
         }
-        db.dbwebtoon.insert_one(doc)
+        db.t_webtoon.insert_one(doc)
 
         return jsonify({"result": "success", 'msg': '포스팅 완료'})
     # except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -55,7 +56,7 @@ def posting():
 
 @app.route("/webtoon", methods=['GET'])
 def listing():
-    webtoon_list = list(db.dbwebtoon.find({}, {'_id': False}).limit(4))
+    webtoon_list = list(db.dbwebtoon.find({}, {'_id': False}))
     return jsonify({'webtoons': webtoon_list})
     # token_receive = request.cookies.get('mytoken')
     # try:
@@ -68,12 +69,8 @@ def listing():
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)
 
-# //따온거
-@app.route("/dbwebtoon", methods=["GET"])
-def dbwebtoon_get():
-    dbwebtoon_list = list(db.dbwebtoon.find({}, {'_id': False}))
-    return jsonify({'dbwebtoon': dbwebtoon_list})
+# @app.route("/dbwebtoon", methods=["GET"])
+# def dbwebtoon_get():
+#     dbwebtoon_list = list(db.dbwebtoon.find({}, {'_id': False}))
+#     return jsonify({'dbwebtoon': dbwebtoon_list})
 
-
-if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
