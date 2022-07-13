@@ -1,183 +1,201 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <!-- webpage title -->
+    <title>마이페이지</title>
     <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- Bulma CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
             crossorigin="anonymous"></script>
-        <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
-        <!-- JS -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-                crossorigin="anonymous"></script>
-        <!-- Google font -->
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        * {font-family: 'Noto Sans KR', sans-serif;
-        }
-        .mytitle {
-            width: 100%;
-            height: 500px;
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('https://otakukart.com/wp-content/uploads/2021/04/featured-webtoon.jpg');
-            background-position: center;
-            background-size: auto;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .mytitle > button {
-            width: 200px;
-            height: 50px;
-            background-color: transparent;
-            color: white;
-            border-radius: 50px;
-            border: 1px solid white;
-            margin-top: 70px;
-        }
-        .mytitle > button:hover {
-            border: 3px solid hsl(141, 53%, 53%);
-            background-color: hsl(141, 53%, 53%);
-            color: white;
-        }
-        .mycomment {
-            color: gray;
-        }
-        .mycards {
-            margin: 20px auto 0px auto;
-            width: 1500px;
-            max-width: 1500px;
-        }
-        .mypost {
-            width: 1500px;
-            margin: 20px auto 0px auto;
-            padding: 20px;
-            box-shadow: 0px 0px 3px 0px gray;
-            display: none;
-        }
-        .mybtns {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .mybtns>button {
-            margin-right: 10px;
-        }
-        #cards-box {
-            background-color: #ffffff;
-            margin-top: 1px;
-        }
-        .pagescroll {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            margin-top: 50px;
-        }
-        .img-thumbnail{
-            width : 200px;
-            height: 200px;
-        }
-        .mytitle > .logo {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
+
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+
+<style type="text/css">
+    * {
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+    .mycards {
+        margin: 80px auto 0px auto;
+        width: 95%;
+        max-width: 900px;
+    }
+    #post-box {
+        width: 500px;
+        margin: 20px auto;
+        padding: 50px;
+        border: black solid;
+        border-radius: 5px;
+    }
+    .mytitle {
+        width: 100%;
+        height: 400px;
+        background-image: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('https://otakukart.com/wp-content/uploads/2021/04/featured-webtoon.jpg');
+        background-position: center;
+        background-size: auto;
+        color: white;
+        font-weight: 700;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .mytitle > button {
+        width: 200px;
+        height: 50px;
+
+        background-color: transparent;
+        color: white;
+
+        border-radius: 50px;
+        border: 1px solid white;
+        margin-top: 10px;
+    }
+    .mytitle > button:hover {
+        border: 3px solid hsl(141, 53%, 53%);
+        background-color: hsl(141, 53%, 53%);
+        color: white;
+    }
+    .mycomment {
+        color: gray;
+    }
+    .mypost {
+        width: 1500px;
+        margin: 20px auto 0px auto;
+        padding: 20px;
+        box-shadow: 0px 0px 3px 0px gray;
+        display: none;
+    }
+    .mybtns {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .mybtns>button {
+        margin-right: 10px;
+    }
+    #cards-box {
+        background-color: #ffffff;
+        margin-top: 1px;
+    }
+    .pagescroll {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: 50px;
+    }
+    .modal-content {
             width: 600px;
             max-width: 80%;
-        }
-    </style>
-    <script>
-        $(document).ready(function () {
-            listing();
-        });
-        function listing() {
-            $('#cards-box').empty()
-            $.ajax({
-                type: "GET",
-                url: "http://spartacodingclub.shop/web/api/movie", // Webtoon api url 들어갈자리
-                data: {},
-                success: function (response) {
-                    let rows = response['movies']
-                    // user id/pw를 토큰으로 받아 해당 유저의 데이터베이스 url을 받아온 뒤 url들의 json을 다시 읽기
-                    for (let i = 0; i < 5; i++) {
-                        let title = rows[i]['title']
-                        let desc = rows[i]['desc']
-                        let image = rows[i]['image']
-                        let star = rows[i]['star']
-                        let comment = rows[i]['comment']
-                        // let star_image = '⭐'.repeat(star)
-                        let temp_html = `<div class="col">
-                                             <div class="card h-100">
-                                                 <img src="${image}"
-                                                      class="card-img-top" alt="...">
-                                                 <div class="card-body">
-                                                     <h5 class="card-title">${title}</h5>
-                                                     <p class="card-text">${desc}</p>
-                                                     <p>${'⭐'.repeat(star)}</p>
-                                                     <p class="mycomment">${comment}</p>
-                                                 </div>
+    }
+    a {
+                text-decoration: none;
+    }
+</style>
+
+
+<script>
+    $(document).ready(function () {
+        showMyWebtoons();
+    });
+    function showMyWebtoons() {
+        $('#cards-box').empty()
+        $.ajax({
+            type: "GET",
+            url: "/webtoon",
+            data: {},
+            success: function (response) {
+                let rows = response['movies']
+                for (let i = 0; i < 5; i++) {
+                    let title = rows[i]['title']
+                    let desc = rows[i]['desc']
+                    let image = rows[i]['image']
+                    let star = rows[i]['star']
+                    let comment = rows[i]['comment']
+                    // let star_image = '⭐'.repeat(star)
+                    let temp_html = `<div class="col">
+                                         <div class="card h-100">
+                                             <img src="${image}"
+                                                  class="card-img-top" alt="...">
+                                             <div class="card-body">
+                                                 <h5 class="card-title">${title}</h5>
+                                                 <p class="card-text">${desc}</p>
+                                                 <p>${'⭐'.repeat(star)}</p>
+                                                 <p class="mycomment">${comment}</p>
                                              </div>
-                                         </div>`
-                        $('#cards-box').append(temp_html)
-                    }
+                                         </div>
+                                     </div>`
+                    $('#cards-box').append(temp_html)
+                }
+            }
+        })
+    }
+    function postWebtoons() {
+            let url = $('#url').val()
+            let star = $('#star').val()
+            let comment = $('#comment').val()
+            $.ajax({
+                type: "POST",
+                url: "/webtoon",
+                data: {url_give: url, star_give: star, comment_give: comment},
+                success: function (response) {
+                    alert(response['msg'])
+                    $("#modal-post").removeClass("is-active")
+                    window.location.reload()
                 }
             })
-        }
-        function open_box() {
-            $('#post-box').show()
-        }
-        function close_box() {
-            $('#post-box').hide()
-        }
-
-        function postWebtoons() {
-                let url = $('#url').val()
-                let star = $('#star').val()
-                let comment = $('#comment').val()
-                $.ajax({
-                    type: "POST",
-                    url: "/webtoon",
-                    data: {url_give: url, star_give: star, comment_give: comment},
-                    success: function (response) {
-                        alert(response['msg'])
-                        $("#modal-post").removeClass("is-active")
-                        window.location.reload()
-                    }
-                })
-        }
-    </script>
+    }
+    function logout() {
+        window.location.href="/logout"
+    }
+</script>
 </head>
 <body>
-    <div class="mytitle">
-        <div class="logo">
-            <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
-                <div class="navbar-brand">
-                    <a class="navbar-item" href="/" onclick="window.location.href='/'">
-                        <img src="https://velog.velcdn.com/images/ariul-dev/post/c6356acc-d97d-4b31-9412-1ac695802c03/image.png"
-                             width="95">
-                        <strong class="is-sparta"
-                             style="font-family: 'Stylish', sans-serif;font-size: larger;">인생네툰</strong>
-                    </a>
-                </div>
-            </nav>
+    <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <img src="../static/lifewebtoon2.png" alt="" width="200" height="28">
+            </a>
         </div>
-        <h1 style="margin-top: 50px;">'~~'의 인생네툰</h1>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="field is-grouped">
+                            <p class="control">
+                                <button onclick="logout()" class="button is-success">
+                                    <span>로그아웃</span>
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="mytitle">
+        <h1 style="margin-top: 50px;">{{name}}의 인생네툰</h1>
 
-        깃헙 테스트
         <button onclick='$("#modal-post").addClass("is-active")'>
             <h5>기록하기</h5>
         </button>
@@ -212,6 +230,7 @@
                             </div>
                             <nav class="level is-mobile">
                                 <div class="level-left">
+
                                 </div>
                                 <div class="level-right">
                                     <div class="level-item">
@@ -231,9 +250,9 @@
                     onclick='$("#modal-post").removeClass("is-active")'></button>
         </div>
     </div>
-    <div class="mypost" id="post-box">
+    <div class="mypost" id="post-box2">
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="url" placeholder="name@example.com">
+            <input type="email" class="form-control" id="url2" placeholder="name@example.com">
             <label for="floatingInput">WebToon URL</label>
         </div>
         <div class="input-group mb-3">
@@ -254,61 +273,14 @@
         </div>
         <div class="mybtns">
             <button type="button" class="btn btn-dark">기록하기</button>
-            <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
         </div>
     </div>
     <div class="mycards">
         <div id="cards-box" class="row row-cols-1 row-cols-md-5 g-4">
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                        class="img-thumbnail" alt="썸네일" style="width: 200px; height: 200px; margin: 8px auto;">
-                    <div class="card-body">
-                        <h5 class="card-title">웹툰 제목이 들어갑니다</h5>
-                        <p class="card-text">여기에 웹툰에 대한 설명이 들어갑니다.</p>
-                        <p>⭐⭐⭐</p>
-                        <p class="mycomment">나의 한줄 평을 씁니다</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                        class="img-thumbnail" alt="썸네일">
-                    <div class="card-body">
-                        <h5 class="card-title">웹툰 제목이 들어갑니다</h5>
-                        <p class="card-text">여기에 웹툰에 대한 설명이 들어갑니다.</p>
-                        <p>⭐⭐⭐</p>
-                        <p class="mycomment">나의 한줄 평을 씁니다</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                        class="img-thumbnail" alt="썸네일">
-                    <div class="card-body">
-                        <h5 class="card-title">웹툰 제목이 들어갑니다</h5>
-                        <p class="card-text">여기에 웹툰에 대한 설명이 들어갑니다.</p>
-                        <p>⭐⭐⭐</p>
-                        <p class="mycomment">나의 한줄 평을 씁니다</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                        class="img-thumbnail" alt="썸네일">
-                    <div class="card-body">
-                        <h5 class="card-title">웹툰 제목이 들어갑니다</h5>
-                        <p class="card-text">여기에 웹툰에 대한 설명이 들어갑니다.</p>
-                        <p>⭐⭐⭐</p>
-                        <p class="mycomment">나의 한줄 평을 씁니다</p>
-                    </div>
-                </div>
-            </div>
+    <!--           유저가 직접 평가한 웹툰 박스가 들어갈 공간            -->
         </div>
     </div>
+    <!--    평가한 웹툰이 5개가 넘어갈 경우 페이지를 나눠서 관리  -->
     <div class="pagescroll">
         <nav aria-label="Page navigation example">
             <ul class="pagination">
