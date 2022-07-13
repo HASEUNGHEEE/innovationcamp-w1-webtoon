@@ -3,10 +3,9 @@ app = Flask(__name__)
 
 import requests
 from bs4 import BeautifulSoup
-import certifi
-
 from pymongo import MongoClient
-client = MongoClient('mongodb+srv://test:sparta@cluster0.mnffv.mongodb.net/Cluster0?retryWrites=true&w=majority',
+import certifi
+client = MongoClient('mongodb+srv://test:sparta@cluster0.clgy5.mongodb.net/cluster0?retryWrites=true&w=majority',
                      tlsCAFile=certifi.where())
 db = client.dbwebtoon
 
@@ -15,12 +14,10 @@ db = client.dbwebtoon
 def main():
     return render_template('main.html')
 
-
 @app.route('/mypage')
 def detail():
     username = "username1"
     return render_template('mypage.html', name=username)
-
 
 
 @app.route('/webtoon', methods=['POST'])
@@ -50,7 +47,6 @@ def posting():
             "star": star_receive,
             "comment": comment_receive,
         }
-
         db.t_webtoon.insert_one(doc)
 
         return jsonify({"result": "success", 'msg': '포스팅 완료'})
@@ -58,7 +54,7 @@ def posting():
     #     return redirect(url_for("home"))
 
 @app.route("/webtoon", methods=['GET'])
-def listing():
+def mylisting():
     webtoon_list = list(db.dbwebtoon.find({}, {'_id': False}))
     return jsonify({'webtoons': webtoon_list})
     # token_receive = request.cookies.get('mytoken')
