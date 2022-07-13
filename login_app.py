@@ -30,12 +30,24 @@ def home():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
+@app.route('/register')
+def register_back():
+    msg = request.args.get("msg")
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        userinfo = db.t_user.find_one({"user_id": payload["id"]})
+        user_id = userinfo['user_id']
+        return render_template('index.html', user_id=user_id, msg="현재 로그인되어 있습니다.")
+    except jwt.ExpiredSignatureError:
+        return render_template('register.html', msg=msg)
+    except jwt.exceptions.DecodeError:
+        return render_template('register.html', msg=msg)
 
 @app.route('/login')
 def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
-
 
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
@@ -60,8 +72,9 @@ def sign_in():
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
-@app.route('/sign_up/save', methods=['POST'])
+@app.route('/register/save', methods=['POST'])
 def sign_up():
+
     username_receive = request.form['username_give']
     email_receive = request.form['email_give']
     password_receive = request.form['password_give']
@@ -75,7 +88,7 @@ def sign_up():
     return jsonify({'result': 'success'})
 
 
-@app.route('/sign_up/check_dup', methods=['POST'])
+@app.route('/register/check_dup', methods=['POST'])
 def check_dup():
     username_receive = request.form['username_give']
     exists = bool(db.t_user.find_one({"user_id": username_receive}))
