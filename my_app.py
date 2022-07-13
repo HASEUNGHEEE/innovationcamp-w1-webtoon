@@ -24,6 +24,7 @@ if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
 
 
+
 @app.route('/webtoon', methods=['POST'])
 def posting():
     # token_receive = request.cookies.get('mytoken')
