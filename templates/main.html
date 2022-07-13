@@ -106,19 +106,20 @@
             <div class="navbar-end">
                 <!-- 우측 상단 표시부/ 로그인 전후에 따라 기능 구분 -->
                 <div class="navbar-item">
-                    <!--로그인 안 했을 시 로그인 칸이 표출-->
+                    {% if user_id is defined %}
                     <div class="name_box">
-                        <button class="bd-tw-button button" onclick="login()">로그인</button>
-                    </div>
-                    <!-- 로그인 했을 시 마이페이지 가기와 로그아웃 버튼 표출 -->
-                    <div class="name_box">
-                        <a href="/">
+                        <a href="/mypage">
                             <button class="bd-tw-button button">{{ user_id }} 마이페이지 </button>
                         </a>
                     </div>
                     <div class="logout_box">
                         <button class="button is-success" onclick="logout()">로그아웃</button>
                     </div>
+                    {% else %}
+                    <div class="name_box">
+                        <button class="bd-tw-button button" onclick="login()">로그인</button>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </nav>

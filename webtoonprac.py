@@ -21,7 +21,6 @@ import jwt
 import datetime
 
 # 회원가입 시엔, 비밀번호를 암호화하여 DB에 저장해두는 게 좋습니다.
-# 그렇지 않으면, 개발자(=나)가 회원들의 비밀번호를 볼 수 있으니까요.^^;
 import hashlib
 
 import random
@@ -30,13 +29,11 @@ ca = certifi.where()
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 
-#################################
-##  HTML을 주는 부분             ##
-#################################
-@app.route('/')
-def main():
-    return render_template('main.html')
+# @app.route('/')
+# def main():
+#     return render_template('main.html')
 
+# 로그인 및 회원가입
 @app.route('/')
 def home():
     token_receive = request.cookies.get('mytoken')
@@ -44,11 +41,12 @@ def home():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         userinfo = db.t_user.find_one({"user_id": payload["id"]})
         user_id = userinfo['user_id']
-        return render_template('index.html', user_id=user_id)
+        # print(user_id)
+        return render_template('main.html', user_id=user_id)
     except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return render_template('main.html')
     except jwt.exceptions.DecodeError:
-        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+        return render_template('main.html')
 
 @app.route('/register')
 def register_back():
@@ -63,7 +61,6 @@ def register_back():
         return render_template('register.html', msg=msg)
     except jwt.exceptions.DecodeError:
         return render_template('register.html', msg=msg)
-
 
 @app.route('/update')
 def update_back():
@@ -89,7 +86,6 @@ def update():
     }
     db.t_user.update_one(doc)
     return jsonify({'result': 'success'})
-
 
 
 @app.route('/login')
@@ -123,10 +119,6 @@ def sign_in():
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
-#################################
-##  로그인을 위한 API            ##
-#################################
-
 # [회원가입 API]
 # id, pw, nickname을 받아서, mongoDB에 저장합니다.
 # 저장하기 전에, pw를 sha256 방법(=단방향 암호화. 풀어볼 수 없음)으로 암호화해서 저장합니다.
@@ -159,85 +151,112 @@ def check_dup():
     # print(value_receive, type_receive, exists)
     return jsonify({'result': 'success', 'exists': exists})
 
+
+# 메인 글쓰기
 @app.route('/webtoon', methods=['POST'])
 def posting():
-    # # name_receive = 토큰의 id 를 이용하여 db 에서 이름 가져오기
-    # token_receive = request.cookies.get('mytoken')
-    #     try:
-    #         # 토큰으로부터 payload를 불러옴
-    #         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    #         userinfo = db.user.find_one({"user_id": payload['id']})
-    #         # payload 내에 있는 user_id를 변수에 할당
-    #         user_id = userinfo['user_id']
+    url_receive = request.form['url_give']
+    star_receive = request.form['star_give']
+    comment_receive = request.form["comment_give"]
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+    data = requests.get(url_receive, headers=headers)
+
+    soup = BeautifulSoup(data.text, "lxml")
+    image = soup.select_one('meta[property="og:image"]')['content']
+    name = soup.select_one('meta[property="og:title"]')['content']
 
 
-            url_receive = request.form['url_give']
-            star_receive = request.form['star_give']
-            comment_receive = request.form["comment_give"]
+    detailInfo = soup.select_one('.comicinfo > .detail')
+    desc = detailInfo.select_one('p').text
+    genre = detailInfo.select_one('.genre').text
+    writer = detailInfo.select_one('.wrt_nm').text[8:]
 
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-            data = requests.get(url_receive, headers=headers)
+    doc = {
+        # "user_id": prac1,
+        "image": image,
+        "url": url_receive,
+        "comment": comment_receive,
+        "star": star_receive,
+        "name": name,
+        "desc": desc,
+        "genre": genre,
+        "writer": writer
+    }
+    db.t_webtoon.insert_one(doc)
 
-            soup = BeautifulSoup(data.text, "lxml")
-            image = soup.select_one('meta[property="og:image"]')['content']
-            name = soup.select_one('meta[property="og:title"]')['content']
+    return jsonify({"result": "success", 'msg': '포스팅 완료'})
 
-
-            detailInfo = soup.select_one('.comicinfo > .detail')
-            desc = detailInfo.select_one('p').text.replace('<br/>', '\n')
-            genre = detailInfo.select_one('.genre').text
-            writer = detailInfo.select_one('.wrt_nm').text[8:]
-
-
-            doc = {
-                # "user_id": user_info["username"],
-                "image": image,
-                "url": url_receive,
-                "comment": comment_receive,
-                "star": star_receive,
-                "name": name,
-                "desc": desc,
-                "genre": genre,
-                "writer": writer
-            }
-            db.t_webtoon.insert_one(doc)
-
-            return jsonify({"result": "success", 'msg': '포스팅 완료'})
-        # except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        #     return redirect(url_for("home"))
-
-
+# 메인페이지 카드 리스팅
 @app.route("/webtoon", methods=['GET'])
 def listing():
     webtoon_list = list(db.t_webtoon.find({}, {'_id': False}))
     random_list = random.sample(webtoon_list, k=4)
 
     return jsonify({'webtoons': random_list})
-    # token_receive = request.cookies.get('mytoken')
-    # try:
-    #     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    #     # 포스팅 목록 받아오기
-    #     return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다."})
-    # except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-    #     return redirect(url_for("home"))
 
 
-
-
-# 더미 글읽기페이지
-# detail 페이지 response가 이걸로 들어감..주의!!
-# @app.route('/detail')
-# def detail():
-#     return render_template('detail.html')
-
-# 뷰어화면 웹툰별 데이터 가져오기
+# 개별 웹툰페이지로 이동
 @app.route("/detail/<keyword>")
 def info_get(keyword):
-    target_webtoon = db.t_webtoon.find_one({'name': keyword}, {'_id': False})
-    result = target_webtoon
-    return render_template("detail.html", title=keyword, result=result)
+    result = db.t_webtoon.find_one({'name': keyword}, {'_id': False})
+    results = list(db.t_webtoon.find({'name': keyword}, {'_id': False}))
+    return render_template("detail.html", title=keyword, result=result, results=results)
 
+# 마이페이지
+@app.route('/mypage')
+def detail():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        userinfo = db.t_user.find_one({"user_id": payload["id"]})
+        user_id = userinfo['user_id']
+        return render_template('mypage.html', user_id=user_id, msg="현재 로그인되어 있습니다.")
+    except jwt.ExpiredSignatureError:
+        return render_template('login.html', msg="로그인 정보가 존재하지 않습니다.")
+    except jwt.exceptions.DecodeError:
+        return render_template('login.html', msg="로그인 정보가 존재하지 않습니다.")
+
+@app.route('/mypage', methods=['POST'])
+def my_posting():
+    url_receive = request.form['url_give']
+    star_receive = request.form['star_give']
+    comment_receive = request.form["comment_give"]
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+    data = requests.get(url_receive, headers=headers)
+
+    soup = BeautifulSoup(data.text, "lxml")
+    image = soup.select_one('meta[property="og:image"]')['content']
+    name = soup.select_one('meta[property="og:title"]')['content']
+
+
+    detailInfo = soup.select_one('.comicinfo > .detail')
+    desc = detailInfo.select_one('p').text
+    genre = detailInfo.select_one('.genre').text
+    writer = detailInfo.select_one('.wrt_nm').text[8:]
+
+    doc = {
+        # "user_id": {{user_id}},
+        "image": image,
+        "url": url_receive,
+        "comment": comment_receive,
+        "star": star_receive,
+        "name": name,
+        "desc": desc,
+        "genre": genre,
+        "writer": writer
+    }
+    db.t_webtoon.insert_one(doc)
+
+    return jsonify({"result": "success", 'msg': '포스팅 완료'})
+
+@app.route("/mypage", methods=['GET'])
+def my_listing():
+    webtoon_list = list(db.dbwebtoon.find({}, {'_id': False}))
+    return jsonify({'webtoons': webtoon_list})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

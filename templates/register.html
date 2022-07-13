@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Webpage Title -->
+    <title>인생네툰 회원가입</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <!--    sweetalert2-->
+    <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@4/bulma.css" rel="stylesheet">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script>
+        // 유효성 검사
+        function is_nickname(asValue) {
+            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
+            return regExp.test(asValue);
+        }
+
+        function is_password(asValue) {
+            var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+            return regExp.test(asValue);
+        }
+
+        function is_email(asValue) {
+            var regExp = /[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]$/i;
+            return regExp.test(asValue);
+        }
+
+        // 아이디 체크
+        function check_dup() {
+            let username = $("#input-username").val()
+            console.log(username)
+            if (username == "") {
+                $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
+                $("#input-username").focus()
+                return;
+            }
+            if (!is_nickname(username)) {
+                $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이").removeClass("is-safe").addClass("is-danger")
+                $("#input-username").focus()
+                return;
+            }
+            $("#help-id").addClass("is-loading")
+            $.ajax({
+                type: "POST",
+                url: "/register/check_dup",
+                data: {
+                    username_give: username
+                },
+                success: function (response) {
+
+                    if (response["exists"]) {
+                        $("#help-id").text("이미 존재하는 아이디입니다.").removeClass("is-safe").addClass("is-danger")
+                        $("#input-username").focus()
+                    } else {
+                        $("#help-id").text("사용할 수 있는 아이디입니다.").removeClass("is-danger").addClass("is-success")
+                    }
+                    $("#help-id").removeClass("is-loading")
+
+                }
+            });
+        }
+
+        function sign_up() {
+            let username = $("#input-username").val()
+            let email = $("#input-email").val()
+            let password = $("#input-password").val()
+            let password2 = $("#input-password2").val()
+            console.log(username, email, password, password2)
+
+
+            if ($("#help-id").hasClass("is-danger")) {
+                 Swal.fire({
+                    icon: 'warning',
+                    text: "아이디를 다시 확인해주세요."
+                });
+                return;
+            } else if (!$("#help-id").hasClass("is-success")) {
+                   Swal.fire({
+                    icon: 'warning',
+                    text: "아이디 중복확인을 해주세요."
+                });
+                return;
+            }
+            // email 확인
+            if (email == "") {
+                $("#help-email").text("이메일을 입력해주세요.").removeClass("is-safe").addClass("is-danger")
+                $("#input-email").focus()
+                return;
+            } else if (!is_email(email)) {
+                $("#help-email").text("이메일의 형식을 확인해주세요").removeClass("is-safe").addClass("is-danger")
+                $("#input-email").focus()
+                return
+            } else {
+                $("#help-email").text("사용할 수 있는 이메일입니다.").removeClass("is-danger").addClass("is-success")
+            }
+            // 비밀번호 확인
+            if (password == "") {
+                $("#help-password").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
+                $("#input-password").focus()
+                return;
+            } else if (!is_password(password)) {
+                $("#help-password").text("비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자").removeClass("is-safe").addClass("is-danger")
+                $("#input-password").focus()
+                return
+            } else {
+                $("#help-password").text("사용할 수 있는 비밀번호입니다.").removeClass("is-danger").addClass("is-success")
+            }
+            if (password2 == "") {
+                $("#help-password2").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
+                $("#input-password2").focus()
+                return;
+            } else if (password2 != password) {
+                $("#help-password2").text("비밀번호가 일치하지 않습니다.").removeClass("is-safe").addClass("is-danger")
+                $("#input-password2").focus()
+                return;
+            } else {
+                $("#help-password2").text("비밀번호가 일치합니다.").removeClass("is-danger").addClass("is-success")
+            }
+            $.ajax({
+                type: "POST",
+                url: "/register/save",
+                data: {
+                    username_give: username,
+                    email_give: email,
+                    password_give: password
+                },
+                success: function (response) {
+                    Swal.fire({
+                        text: '회원가입을 축하드립니다!',
+                        icon: 'success',
+                        confirmButtonText: '확인'
+                    })
+                    setTimeout(function () {
+                        window.location.replace("/login")
+                    }, 2000);
+                }
+            });
+
+        }
+
+        function toggle_sign_up() {
+            $("#sign-up-box").toggleClass("is-hidden")
+            $("#agreement-whole").fadeToggle("mem_aree_wrap mAWrap agree_wrap")
+        }
+
+        function allCheckFunc(obj) {
+            $('.agree_checkbox').prop("checked", $(obj).prop("checked"));
+        }
+
+        /* 체크박스 체크시 전체선택 체크 여부 */
+        function oneCheckFunc(obj) {
+            var allObj = $("#agree_checkbox3");
+            var objName = $(obj).attr('class');
+            if ($(obj).prop("checked")) {
+                checkBoxLength = $("." + objName).length;
+                checkedLength = $("." + objName + ":checked").length;
+                if (checkBoxLength == checkedLength) {
+                    allObj.prop("checked", true);
+                } else {
+                    allObj.prop("checked", false);
+                }
+            } else {
+                allObj.prop("checked", false);
+            }
+        }
+
+        $(function () {
+            $("#agree_checkbox3").click(function () {
+                allCheckFunc(this);
+            });
+            $('.agree_checkbox').each(function () {
+                $(this).click(function () {
+                    oneCheckFunc($(this));
+                });
+            });
+        });
+
+        // 약관동의
+        var siren_url = '';
+
+        function mem_agree_ok(siren_mode) {
+            if (!siren_mode) siren_mode = '';
+            if (document.getElementsByName("agree_checkbox").length) {
+                for (var i = 0; i < document.getElementsByName('agree_checkbox').length; i++) {
+                    if (document.getElementsByName('agree_checkbox')[i].checked == false) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '확인요청',
+                            text: '약관동의 확인해주시기 바랍니다.',
+                        });
+                        document.getElementsByName('agree_checkbox')[i].focus();
+                        return;
+                    } else {
+
+                        toggle_sign_up()
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+
+        {# 스크롤바 스타일 시작 #}
+        body::-webkit-scrollbar {
+            width: 15px; /* 스크롤바의 너비 */
+        }
+
+        body::-webkit-scrollbar-thumb {
+            height: 30%; /* 스크롤바의 길이 */
+            background: hsl(141, 53%, 53%); /* 스크롤바의 색상 */
+
+            border-radius: 10px;
+        }
+
+        body::-webkit-scrollbar-track {
+            background: white; /*스크롤바 뒷 배경 색상*/
+        }
+
+        {# 스크롤바 스타일 끝#}
+
+        {# div 스크롤 스타일 #}
+        div.agree_box {
+            width: 100%;
+            height: 300px;
+            resize: none;
+            overflow-y: auto;
+            background-color: hsl(141, 53%, 53%);
+        }
+    </style>
+</head>
+<body>
+
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img src="../static/lifewebtoon2.png" width="112" height="28">
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+        </div>
+    </div>
+
+    <div class="navbar-end">
+        <div class="navbar-item">
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    More
+                </a>
+
+                <div class="navbar-dropdown">
+                    <a class="navbar-item"
+                       href="https://velog.io/@ariul-dev/Innovationcamp-10%EC%A1%B0-S.A-Starting-Assignment">
+                        Our S.A
+                    </a>
+                    <a class="navbar-item" href="https://github.com/HASEUNGHEEE/innovationcamp_webtoon.git">
+                        Our github
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div id="agreement-whole" class="mem_aree_wrap mAWrap agree_wrap">
+    <div class="agree">
+        <div class="container is-max-desktop" style="height: auto">
+            <div id="main_logo" style="text-align: center">
+                <img src="../static/lifewebtoon2.png"/>
+            </div>
+            <div class="notification is-primary">
+                <div class="agree_all">
+                    <label for="agree_checkbox3">
+                        <input type="checkbox" name="agree_checkbox" id="agree_checkbox3" value="전체동의">
+                        <span></span>
+                        <p><strong>모든 방침에 동의합니다.</strong></p>
+
+                    </label>
+                    <br/>
+                </div>
+                <h4 class="title" data-lan="kr">인생네툰 이용약관</h4>
+                <div class="agree_box">
+                    <h4>인생네툰(은)는 회원이 인터넷에 연결된 특정 TV, 컴퓨터 및 기타 장치("인생네툰(은) 지원 장치")에서 인터넷을 통해 엔터테인먼트 콘텐츠("인생네툰(은) 콘텐츠")에
+                        액세스할 수
+                        있는 개인화된 구독 서비스를 제공합니다. <br/>본 이용 약관은 귀하의 당사 서비스 사용에 적용됩니다. 본 이용약관에서 사용되는 "인생네툰(은) 서비스", "당사 서비스"
+                        또는
+                        "서비스"는 모든 기능, 추천 및 리뷰, 당사 웹사이트, 사용자 인터페이스는 물론 당사 서비스와 관련된 모든 콘텐츠 및 소프트웨어.</h4>
+                    <h6>1. 회원가입</h6>
+                    <p>
+                        1.1. 인생네툰(은) 서비스는 종료될 때까지 계속됩니다. 인생네툰(은) 서비스를 사용하려면 인터넷에 액세스할 수 있고 인생네툰(은) 지원 기기가 있어야 하며 하나 이상의
+                        결제 방법을
+                        제공해야 합니다.<br><br>
+                        1.2. 당사는 특별 판촉 계획 또는 제3자가 자체 제품 및 서비스 제공과 관련하여 제공하는 멤버십을 포함하여 다양한 멤버십 계획을 제공할 수 있습니다. 귀하의 가입 시
+                        또는
+                        귀하에게 제공되는 기타 커뮤니케이션에서 공개됩니다.
+                    </p>
+                    <h5>2. 체험 기간</h5>
+                    <p>
+                        2.1. 평가판 사용 가능 여부 및 자격 여부는 인생네툰(은)의 단독 재량에 따라 결정됩니다. 예를 들어 평가판 기간 남용을 방지하기 위해 자격 또는 기간을 제한할 수
+                        있습니다.
+                        당사는 귀하가 자격이 없다고 판단되는 경우 평가판 기간을 취소하고 귀하의 계정을 보류할 권리가 있습니다. 기존 또는 최근 인생네툰(은) 멤버십이 있는 가구 구성원은 자격이
+                        없습니다.
+                        당사는 자격을 결정하기 위해 기존 또는 최근 인생네툰(은) 멤버십에 사용된 디바이스 ID, 결제 방법 또는 계정 이메일 주소와 같은 정보를 사용할 수 있습니다. 다른
+                        제안과의 조합의
+                        경우 제한 사항이 적용될 수 있습니다.
+                    </p>
+                    <h5>3. 인생네툰(은)(무비뷰) 서비스</h5>
+                    <p>
+                        3.1. 일부 인생네툰(은) 콘텐츠는 지원되는 특정 디바이스("오프라인 타이틀")에서 임시 다운로드 및 오프라인 보기에 사용할 수 있습니다. 계정당 오프라인 타이틀 수,
+                        오프라인
+                        타이틀을 포함할 수 있는 최대 장치 수, 오프라인 타이틀 보기를 시작해야 하는 기간 및 오프라인 타이틀에 액세스할 수 있는 기간을 비롯한 제한 사항이 적용됩니다. 일부
+                        오프라인
+                        타이틀은 특정 국가에서 재생되지 않을 수 있으며 해당 오프라인 타이틀을 스트리밍할 수 없는 국가에서 온라인으로 전환하는 경우 해당 국가에 있는 동안 오프라인 타이틀을 재생할
+                        수
+                        없습니다.<br><br>
+                        3.2. 귀하는 모든 관련 법률, 규칙 및 규정 또는 서비스 또는 콘텐츠 사용에 대한 기타 제한 사항에 따라 이와 관련된 모든 기능을 포함하여 인생네툰(은) 서비스를
+                        사용하는 데
+                        동의합니다. 귀하는 에 포함되거나 획득한 콘텐츠 및 정보를 보관, 복제, 배포, 수정, 표시, 수행, 출판, 라이선스 부여, 파생 작업 생성, 판매 제안 또는 사용(이 사용
+                        약관에서 명시적으로 승인된 경우 제외)하지 않을 것에 동의합니다. 또는 인생네툰(은) 서비스를 통해. 또한 귀하는 인생네툰(은) 서비스의 콘텐츠 보호를 우회, 제거, 변경,
+                        비활성화,
+                        저하 또는 방해하지 않을 것에 동의합니다. 로봇, 스파이더, 스크레이퍼 또는 기타 자동화된 수단을 사용하여 인생네툰(은) 서비스에 액세스 디컴파일, 인생네툰(은) 서비스를
+                        통해
+                        액세스할 수 있는 소프트웨어나 기타 제품 또는 프로세스를 역설계하거나 분해하는 행위 코드나 제품을 삽입하거나 어떤 식으로든 인생네툰(은) 서비스의 콘텐츠를 조작하는 행위
+                        또는 데이터
+                        마이닝, 데이터 수집 또는 추출 방법을 사용합니다. 또한 귀하는 소프트웨어 바이러스 또는 기타 컴퓨터 코드, 파일 또는 프로그램. 귀하가 본 이용 약관의 섹션 4.1,
+                        4.2,
+                        4.3 또는 4.5를 위반하거나 불법 복제, 신원 도용, 무단 신용 카드 사용하면 법적 처벌을 받을 수 있습니다.<br><br>
+                        3.3. 인생네툰(은) 소프트웨어는 인생네툰(은)에서 개발했거나 인생네툰(은)를 위해 개발되었습니다. 귀하는 서비스를 사용하려면 제3자 라이선스가 적용되는 제3자
+                        소프트웨어가 필요할 수
+                        있음을 인정합니다. 귀하는 인생네툰(은) 및 관련 제3자 소프트웨어의 업데이트된 버전을 자동으로 받을 수 있다는 데 동의합니다.<br><br>
+                    </p>
+                    <h5>4. 비밀번호 및 계정 접근</h5>
+                    <p>
+                        인생네툰(은) 계정을 생성하고 결제 수단이 청구되는 회원("계정 소유자")은 인생네툰(은) 계정 사용을 통해 발생하는 모든 활동에 대한 책임이 있습니다. 당사는 계정 해킹,
+                        신원
+                        도용, 무단 신용 카드 사용 또는 기타 유사한 사기 또는 불법 활동으로부터 귀하, 인생네툰(은) 또는 타인을 보호하기 위해 귀하의 계정을 해지하거나 계정을 보류할 수
+                        있습니다.
+                    </p>
+                    <h5>5. 책임에 대한 보증 및 제한</h5>
+                    <p>
+                        인생네툰(은)는 안정적인 서비스 제공을 위해 노력하겠습니다. 그러나 인생네툰(은)의 책임 없이 서비스가 중단되거나 오류가 발생할 수 있습니다. 인생네툰(은)는
+                        인생네툰(은)의 고의적 위법
+                        행위 또는 과실로 인해 발생하는 손해에 대해서만 책임을 집니다. 인생네툰(은)는 인생네툰(은)의 고의 또는 중과실로 인해 그러한 손해가 발생한 경우를 제외하고 특별한
+                        상황으로 인해
+                        일반적인 범위를 초과하는 손해에 대해 책임을 지지 않습니다.
+                    </p>
+                    <h5>6. 기타</h5>
+                    <p>
+                        6.1. 준거법 . 이 이용약관은 대한민국 법률에 따라 규율되고 해석됩니다.<br><br>
+                        6.2. 요청하지 않은 자료 . 인생네툰(은)는 인생네툰(은) 콘텐츠에 대한 요청하지 않은 자료나 아이디어를 허용하지 않으며, 인생네툰(은)에 전송된 자료나 아이디어와 모든
+                        미디어의
+                        콘텐츠 또는 프로그래밍 유사성에 대해 책임을 지지 않습니다.<br><br>
+                        6.3. 고객 지원 . 당사 서비스 및 기능에 대한 자세한 정보를 찾거나 계정에 도움이 필요한 경우 인생네툰(은).com 웹사이트를 통해 액세스할 수 있는 인생네툰(은)
+                        고객센터를
+                        방문하세요. 어떤 경우에는 고객 서비스가 귀하의 컴퓨터에 대한 전체 액세스 권한을 제공하는 원격 액세스 지원 도구를 사용하여 귀하를 가장 잘 지원할 수 있습니다. 당사가
+                        이러한
+                        액세스 권한을 갖는 것을 원하지 않는 경우 원격 액세스 도구를 통한 지원에 동의하지 않아야 하며 다른 수단을 통해 귀하를 지원할 것입니다. 본 이용 약관과 고객 지원 또는
+                        당사
+                        웹사이트의 다른 부분에서 제공한 정보가 충돌하는 경우 본 이용 약관이 우선합니다.<br><br>
+                        6.4. 이용약관 및 양도조건 변경 . 인생네툰(은)는 수시로 본 이용 약관을 변경할 수 있습니다. 그러한 변경 사항이 귀하에게 적용되기 최소 30일 전에 귀하에게 통지할
+                        것입니다.
+                        당사는 관련 법률에 따라 요구되는 절차에 따라 관련 권리 및 의무를 포함하여 귀하와의 계약을 양도하거나 이전할 수 있으며, 동의하지 않을 경우 언제든지 멤버십을 취소할 수
+                        있습니다.<br><br>
+                        6.5. 전자 통신 . 당사는 귀하의 계정과 관련된 정보(예: 지불 승인, 청구서, 비밀번호 또는 지불 방법 변경, 확인 메시지, 통지)를 예를 들어 등록 시 제공한 귀하의
+                        이메일
+                        주소로 이메일을 통해 전자 형식으로만 보낼 것입니다.
+                    </p>
+                    <p class="date_update">최종 업데이트: 2022년 7월 13일</p>
+                </div>
+                <br/>
+                <div class="agree_check_box">
+                    <label for="agree_checkbox1" data-lan="kr">
+                        <input type="checkbox" name="agree_checkbox" id="agree_checkbox1" class="agree_checkbox"
+                               value="이용약관" |lan="kr">
+                        <p>위 이용약관에 동의합니다.</p>
+                    </label>
+                </div>
+                <br/>
+                <div class="agree">
+                    <h4 class="title" data-lan="kr">개인정보처리방침</h4>
+                    <div class="agree_box">
+                        <h5 data-lan="kr">수집하는 개인정보의 항목</h5>
+                        <p data-lan="kr">회사는 회원가입, 상담, 서비스 신청 등을 위해 아래와 같은 개인정보를 수집하고 있습니다.</p>
+                        <ul>
+                            <li><strong data-lan="kr">- 수집항목</strong> : <span class="privacy_column_list"></span></li>
+                            <li><strong data-lan="kr">- 개인정보 수집방법</strong> : <span data-lan="kr">홈페이지</span>(<span
+                                    data-lan="kr">회원가입</span>)
+                            </li>
+                        </ul>
+
+                        <h5 data-lan="kr">개인정보의 수집 및 이용목적</h5>
+                        <p data-lan="kr">회사는 수집한 개인정보를 다음의 목적을 위해 활용합니다.</p>
+                        <ul>
+                            <li>
+                                <strong data-lan="kr">- 서비스 제공에 관한 계약 이행 및 서비스 제공에 따른 관리</strong>
+                                <p data-lan="kr">이용자들의 서비스 이용 분류에 사용</p>
+                            </li>
+                            <li>
+                                <strong data-lan="kr">- 회원 관리</strong>
+                                <p data-lan="kr">회원제 서비스 이용에 따른 본인확인, 개인 식별, 불량회원의 부정 이용 방지와 비인가 사용 방지, 가입 의사 확인,
+                                    연령확인</p>
+                            </li>
+                        </ul>
+
+                        <h5 data-lan="kr">개인정보의 보유 및 이용기간</h5>
+                        <p data-lan="kr">회사는 개인정보 수집 및 이용목적이 달성된 후에는 예외 없이 해당 정보를 지체 없이 파기합니다.</p>
+                    </div>
+                    <br/>
+                    <div class="agree_check_box">
+                        <label for="agree_checkbox2" data-lan="kr">
+                            <input type="checkbox" name="agree_checkbox" id="agree_checkbox2" class="agree_checkbox"
+                                   value="개인정보처리방침" |lan="kr">
+                            <p>위 개인정보처리방침에 동의합니다.</p>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+            <div class="btn_wrap" style="text-align: center">
+                <button class="button is-primary is-outlined" onclick="history.back()">이전으로</button>
+                <button class="button is-primary is-outlined" onclick="mem_agree_ok()">회원가입</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--약관 동의 끝-->
+
+<!--로그인 페이지 시작-->
+<div id="sign-up-box" class="is-hidden">
+
+    <div class="columns">
+
+        <div class="column is-half" style="text-align: center">
+
+            <img src="../static/lifewebtoon.png"/>
+
+        </div>
+
+        <div class="column section has-text-centered">
+            <div class="container">
+                <div class="box" style="max-width: 480px;margin:auto">
+                    <article class="media">
+                        <div class="media-content">
+                            <div class="content">
+                                <!-- id 중복확인 -->
+                                <div class="field has-addons">
+                                    <div class="control has-icons-left" style="width:100%">
+                                        <input id="input-username" class="input" type="text" placeholder="아이디">
+                                        <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
+                                    </div>
+                                    <div id="btn-check-dup">
+                                        <button class="button is-primary is-outlined" onclick="check_dup()">중복확인
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <p id="help-id" class="help">아이디는 2-10자의 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.</p>
+                                <p id="help-id-login" class="help is-danger"></p>
+                                <!-- email 입력 -->
+                                <div class="field">
+                                    <div class="control has-icons-left">
+                                        <input id="input-email" class="input" type="email" placeholder="이메일">
+                                        <span class="icon is-small is-left"><i class="fa fa-envelope"></i></span>
+                                    </div>
+                                    <p id="help-email" class="help">E-mail 양식을 지켜 입력해주세요.</p>
+                                    <p id="help-email-login" class="help is-danger"></p>
+                                </div>
+
+                                <!-- 비밀번호 입력 -->
+                                <div class="field">
+                                    <div class="control has-icons-left">
+                                        <input id="input-password" class="input" type="password" placeholder="비밀번호">
+                                        <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
+                                    </div>
+                                    <p id="help-password" class="help">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요.
+                                        특수문자(!@#$%^&*)도 사용 가능합니다.</p>
+                                    <p id="help-password-login" class="help is-danger"></p>
+                                </div>
+
+                                <div class="field">
+                                    <div class="control has-icons-left" style="width:100%">
+                                        <input id="input-password2" class="input" type="password"
+                                               placeholder="비밀번호 재입력">
+                                        <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
+                                    </div>
+                                    <p id="help-password2" class="help">비밀번호를 다시 한 번 입력해주세요.</p>
+                                </div>
+
+
+                            </div>
+
+                            <div id="sign-up-box">
+                                <nav class="level is-mobile" style="text-align: center">
+                                    <button class="button is-primary is-outlined" onclick="toggle_sign_up()">
+                                        취소
+                                    </button>
+                                    <button class="button is-primary is-outlined" onclick="sign_up()">
+                                        회원가입
+                                    </button>
+                                </nav>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            </section>
+        </div>
+
+    </div>
+</div>
+</div>
+</body>
+</html>
