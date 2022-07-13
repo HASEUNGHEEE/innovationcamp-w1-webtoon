@@ -12,6 +12,8 @@ from pymongo import MongoClient
 client = MongoClient('mongodb+srv://test:sparta@cluster0.wvkfw4y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
 db = client.dbwebtoon
 
+import random
+
 ## HTML을 주는 부분
 @app.route('/')
 def home():
@@ -43,13 +45,17 @@ def posting():
 
         soup = BeautifulSoup(data.text, 'html.parser')
         image = soup.select_one('meta[property="og:image"]')['content']
+        name = soup.select_one('meta[property="og:title"]')['content']
+        desc = soup.select_one('meta[property="og:description"]')['content']
 
         doc = {
             # "user_id": user_info["username"],
             "image": image,
             "url": url_receive,
             "comment": comment_receive,
-            "star": star_receive
+            "star": star_receive,
+            "name": name,
+            "desc": desc
         }
         db.t_webtoon.insert_one(doc)
 
@@ -60,8 +66,10 @@ def posting():
 
 @app.route("/webtoon", methods=['GET'])
 def listing():
-    webtoon_list = list(db.t_webtoon.find({}, {'_id': False}).limit(4))
-    return jsonify({'webtoons': webtoon_list})
+    webtoon_list = list(db.t_webtoon.find({}, {'_id': False}))
+    random_list = random.sample(webtoon_list, k=4)
+
+    return jsonify({'webtoons': random_list})
     # token_receive = request.cookies.get('mytoken')
     # try:
     #     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])

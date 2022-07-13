@@ -3,7 +3,7 @@
 
     <head>
         <!-- webpage title -->
-        <title>인생네툰</title>
+        <title>인생네툰 | 인생 네이버웹툰 공유 페이지</title>
 
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -17,11 +17,12 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
-
+        <!-- CSS -->
         <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
 
         <!-- JS -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
                 integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
                 crossorigin="anonymous"></script>
@@ -29,84 +30,30 @@
         <!-- Google font -->
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
+        <!--removeCookie를 위한 jQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
-        <!-- style -->
-        <style type="text/css">
-            * {
-                font-family: 'Noto Sans KR', sans-serif;
-            }
-             .mycards {
-                margin: 80px auto 0px auto;
-                width: 95%;
-                max-width: 900px;
-            }
-            .wrap {
-                max-width: 900px;
-                width: 95%;
-                margin: auto;
-            }
-
-            .comment {
-                color: blue;
-                font-weight: bold;
-            }
-
-            #post-box {
-                width: 500px;
-                margin: 20px auto;
-                padding: 50px;
-                border: black solid;
-                border-radius: 5px;
-            }
-            .mytitle {
-                width: 100%;
-                height: 400px;
-
-                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url("https://otakukart.com/wp-content/uploads/2021/04/featured-webtoon.jpg");
-                background-size: cover;
-                background-position: center;
-
-                color: white;
-                font-weight: 700;
-
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-            .mytitle > button {
-                width: 200px;
-                height: 50px;
-
-                background-color: transparent;
-                color: white;
-
-                border-radius: 50px;
-
-                border: 1px solid white;
-
-                margin-top: 10px;
-            }
-            .mytitle > button:hover {
-                border: 3px solid hsl(141, 53%, 53%);
-                background-color: hsl(141, 53%, 53%);
-                color: white;
-            }
-            a {
-                text-decoration: none;
-            }
-
-            .modal-content {
-                width: 600px;
-                max-width: 80%;
-            }
-        </style>
+        {% block css %}
+        {% endblock %}
         <script>
+            function logout() {
+                $.removeCookie('mytoken', {path: '/'});
+                window.location.href = "/"
+            }
+            <!--로그인 페이지로 이동-->
+            function login() {
+                window.location.href = "/login"
+            }
+            <!-- 마이페이지로 이동-->
+            function mypage() {
+                window.location.href="/mypage"
+            }
+
             $(document).ready(function () {
-                showWebtoons();
+                main_showWebtoons();
             });
 
-            function showWebtoons() {
+            function main_showWebtoons() {
                 $.ajax({
                     type: "GET",
                     url: "/webtoon",
@@ -114,15 +61,14 @@
                     success: function (response) {
                         let rows = response['webtoons']
                         for (let i = 0; i < rows.length; i++) {
-                            {#let title = rows[i]['title']#}
                             let image = rows[i]['image']
-                            {#let url = rows[i]['url']#}
-                            {#let desc = rows[i]['desc']#}
-                            {#let comment = rows[i]['comment']#}
+                            let name = rows[i]['name']
 
                             let temp_html = `<div class="col">
-                                                <div class="card">
-                                                    <img src="${image}">
+                                                <div class="card h-100">
+                                                    <a href="/detail/${name}">
+                                                        <img src="${image}">
+                                                    </a>
                                                 </div>
                                             </div>`
                             $('#cards-box').append(temp_html)
@@ -147,13 +93,6 @@
                 })
             }
 
-
-            function logout() {
-                window.location.href="/logout"
-            }
-            function mypage() {
-                window.location.href="/mypage"
-            }
         </script>
 
     </head>
@@ -167,25 +106,22 @@
                 </a>
             </div>
             <div class="navbar-end">
+                <!-- 우측 상단 표시부/ 로그인 전후에 따라 기능 구분 -->
                 <div class="navbar-item">
-                    <div class="navbar-end">
-                        <div class="navbar-item">
-                            <div class="field is-grouped">
-                                <p class="control">
-                                    <button onclick="mypage()" class="bd-tw-button button">
-                                    <span>
-                                        마이페이지
-                                    </span>
-                                    </button>
-                                </p>
-                                <p class="control">
-                                    <button onclick="logout()" class="button is-success">
-                                        <span>로그아웃</span>
-                                    </button>
-                                </p>
-                            </div>
-                        </div>
+                    {% if userid %}<!-- 로그인 했을 시 마이페이지 가기와 로그아웃 버튼 표출 -->
+                    <div class="name_box">
+                        <a href="{{ url_for('user_get') }}">
+                            <button class="bd-tw-button button">{{ userid }} 마이페이지 </button>
+                        </a>
                     </div>
+                    <div class="logout_box">
+                        <button class="button is-success" onclick="logout()">로그아웃</button>
+                    </div>
+                    {% else %}<!--로그인 안 했을 시 로그인 칸이 표출-->
+                    <div class="name_box">
+                        <button class="bd-tw-button button" onclick="login()">로그인</button>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </nav>
