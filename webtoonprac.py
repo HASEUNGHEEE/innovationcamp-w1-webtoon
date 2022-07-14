@@ -197,7 +197,7 @@ def posting():
 @app.route("/webtoon", methods=['GET'])
 def listing():
     webtoon_list = list(db.t_webtoon.find({}, {'_id': False}))
-    random_list = random.sample(webtoon_list, k=4)
+    random_list = random.sample(webtoon_list, k=8)
 
     return jsonify({'webtoons': random_list})
 
