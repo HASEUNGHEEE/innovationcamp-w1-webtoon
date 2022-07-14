@@ -3,7 +3,6 @@
 }
 
 
-
 #post-box {
     width: 500px;
     margin: 20px auto;
@@ -57,20 +56,41 @@ a {
     width: 600px;
     max-width: 80%;
 }
+
 .mycards {
     margin: 80px auto 0px auto;
     width: 95%;
     max-width: 1000px;
     object-fit: cover;
 }
+
 .box {
     width: 95%;
     height: auto;
     overflow: hidden;
     border-radius: 10%;
 }
+
 .box > img {
     max-width: 150%;
     height: auto;
     display: block;
 }
+
+/*{# 스크롤바 스타일 시작 #}*/
+body::-webkit-scrollbar {
+    width: 15px; /* 스크롤바의 너비 */
+}
+
+body::-webkit-scrollbar-thumb {
+    height: 30%; /* 스크롤바의 길이 */
+    background: hsl(141, 53%, 53%); /* 스크롤바의 색상 */
+
+    border-radius: 10px;
+}
+
+body::-webkit-scrollbar-track {
+    background: white; /*스크롤바 뒷 배경 색상*/
+}
+
+/*{# 스크롤바 스타일 끝#}*/
