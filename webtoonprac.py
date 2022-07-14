@@ -223,6 +223,12 @@ def detail():
     except jwt.exceptions.DecodeError:
         return render_template('login.html', msg="로그인 정보가 존재하지 않습니다.")
 
+@app.route("/mypage/<id_keyword>")
+def info_get2(id_keyword):
+    result2 = db.t_webtoon.find_one({'user_id': id_keyword}, {'_id': False})
+    results2 = list(db.t_webtoon.find({'user_id': id_keyword}, {'_id': False}))
+    return render_template("mypage.html", user_id=id_keyword, result2=result2, results2=results2)
+
 @app.route('/mypage', methods=['POST'])
 def my_posting():
     token_receive = request.cookies.get('mytoken')

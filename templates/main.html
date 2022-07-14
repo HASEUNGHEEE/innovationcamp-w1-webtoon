@@ -65,7 +65,7 @@
                             let name = rows[i]['name']
 
                             let temp_html = `<div class="col">
-                                                <div class="card h-100">
+                                                <div class="box">
                                                     <a href="/detail/${name}">
                                                         <img src="${image}">
                                                     </a>
@@ -92,10 +92,12 @@
                     }
                 })
             }
+            function login_notion() {
+                alert('로그인 후 이용하실 수 있습니다!')
+            }
         </script>
     </head>
-
-    <div>
+    <body>
         <!---------------------- navbar ---------------------->
         <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
@@ -110,7 +112,7 @@
                         <p class="control">
                             {% if user_id is defined %}
                             <div class="name_box">
-                                <a href="/mypage">
+                                <a href="/mypage/{{ user_id }}">
                                     <button class="bd-tw-button button">{{ user_id }} 마이페이지 </button>
                                 </a>
                             </div>
@@ -138,11 +140,19 @@
                         <article class="media">
                             <div class="media-content">
                                 <div class="mypost" id="post-box">
+                                    {% if user_id is defined %}
                                     <div class="form-floating mb-3">
                                         <input id="url" type="email" class="form-control"
                                                placeholder="name@example.com">
                                         <label>웹툰URL</label>
                                     </div>
+                                    {% else %}
+                                    <div class="form-floating mb-3">
+                                        <input onclick="login_notion()" id="url" type="email" class="form-control"
+                                               placeholder="name@example.com">
+                                        <label>웹툰URL</label>
+                                    </div>
+                                    {% endif %}
                                     <div class="input-group mb-3">
                                         <label class="input-group-text" for="inputGroupSelect01">별점</label>
                                         <select class="form-select" id="star">
