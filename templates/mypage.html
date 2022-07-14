@@ -117,7 +117,7 @@
     <script>
         {#$(document).ready(function () {#}
         {#    my_showWebtoons();#}
-        {#})
+        {#)
             ;
             #}
 
@@ -174,13 +174,6 @@
                         }
                     })
                 }
-
-                function set_star() {
-                    let star_image = '⭐'.repeat(parseInt({{ result.star }}))
-                    let temp_html = `<p> ${star_image} </p>`
-                    $('.cr').append(temp_html)
-                }
-
     </script>
 </head>
 <body>
@@ -281,7 +274,7 @@
             {% set cmt_star =cmt.star %}
             {% set cmt_desc = cmt.desc %}
             <div class="col">
-                <a href="/mypage/{{ user_page_id }}/{{ title }}">
+                <a href="/detail/{{ title }}">
                     <div class="card h-100">
                         <img src="{{ cmt_image }}"
                              class="card-img-top" alt="...">
