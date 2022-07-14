@@ -118,7 +118,6 @@
 
     <script>
 
-<<<<<<< HEAD
         function logout() {
             $.removeCookie('mytoken', {path: '/'});
             window.location.reload();
@@ -135,15 +134,6 @@
         }
 
 
-=======
-        function login() {
-            window.location.href = "/login"
-        }
-        function logout() {
-            $.removeCookie('mytoken', {path: '/'});
-            window.location.href = "/"
-        }
->>>>>>> dcc448dda0d943e253c59fd38a4b99f36dbe8f50
         function postWebtoons() {
             let url = $('#url').val()
             let star = $('#star').val()
@@ -159,12 +149,10 @@
                 }
             })
         }
-<<<<<<< HEAD
+
         function login_notion() {
             alert('로그인 후 이용하실 수 있습니다!')
         }
-=======
->>>>>>> dcc448dda0d943e253c59fd38a4b99f36dbe8f50
     </script>
 </head>
 <body>
@@ -180,14 +168,11 @@
             <div class="field is-grouped">
                 <p class="control">
                     {% if user_id is defined %}
-<<<<<<< HEAD
                         <div class="name_box">
                             <a href="/mypage/{{ user_id }}">
                                 <button class="bd-tw-button button">{{ user_id }} 마이페이지</button>
                             </a>
                         </div>
-=======
->>>>>>> dcc448dda0d943e253c59fd38a4b99f36dbe8f50
                         <div class="logout_box">
                             <button class="button is-success" onclick="logout()">로그아웃</button>
                         </div>
@@ -199,31 +184,16 @@
                 </p>
             </div>
         </div>
-{#    </div>#}
-{#    <div class="logout_box">#}
-{#        <button class="button is-success" onclick="logout()">로그아웃</button>#}
-{#    </div>#}
-    {#                <div class="navbar-end">#}
-    {#                    <p class="control">#}
-    {#                        <button onclick="logout()" class="button is-success">#}
-    {#                            <span>로그아웃</span>#}
-    {#                        </button>#}
-    {#                    </p>#}
-    {#                </div>#}
-    </div>
     </div>
 </nav>
 
+<!---------------------- 기록 모달창 ---------------------->
 <div class="mytitle">
-    <h1 style="margin-top: 50px;">{{ user_page_id }}의 인생네툰</h1>
+    <h1></h1>
     {% if user_id is defined %}
-    <button onclick='$("#modal-post").addClass("is-active")'>
-        <h5>기록하기</h5>
-    </button>
+        <button onclick='$("#modal-post").addClass("is-active")'><h5>기록하기</h5></button>
     {% else %}
-    <button onclick="login_notion()">
-        <h5>기록하기</h5>
-    </button>
+        <button onclick="login_notion()"><h5>기록하기</h5></button>
     {% endif %}
     <div class="modal" id="modal-post">
         <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
@@ -233,17 +203,17 @@
                     <div class="media-content">
                         <div class="mypost" id="post-box">
                             {% if user_id is defined %}
-                            <div class="form-floating mb-3">
-                                <input id="url" type="email" class="form-control"
-                                       placeholder="name@example.com">
-                                <label>웹툰URL</label>
-                            </div>
+                                <div class="form-floating mb-3">
+                                    <input id="url" type="email" class="form-control"
+                                           placeholder="name@example.com">
+                                    <label>웹툰URL</label>
+                                </div>
                             {% else %}
-                            <div class="form-floating mb-3">
-                                <input onclick="login_notion()" id="url" type="email" class="form-control"
-                                       placeholder="name@example.com">
-                                <label>웹툰URL</label>
-                            </div>
+                                <div class="form-floating mb-3">
+                                    <input onclick="login_notion()" id="url" type="email" class="form-control"
+                                           placeholder="name@example.com">
+                                    <label>웹툰URL</label>
+                                </div>
                             {% endif %}
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="inputGroupSelect01">별점</label>
@@ -257,8 +227,8 @@
                                 </select>
                             </div>
                             <div class="form-floating">
-                                    <textarea id="comment" class="form-control"
-                                              placeholder="Leave a comment here"></textarea>
+                                        <textarea id="comment" class="form-control"
+                                                  placeholder="Leave a comment here"></textarea>
                                 <label for="floatingTextarea2">코멘트</label>
                             </div>
                         </div>
@@ -269,14 +239,16 @@
                             <div class="level-right">
                                 <!--로그인한 유저만 기록하기 기능 사용할 수 있음-->
                                 {% if user_id is defined %}
-                                <div class="level-item">
-                                    <a class="button is-sparta" onclick="postWebtoons()">포스팅하기</a>
-                                </div>
+                                    <div class="level-item">
+                                        <a class="button is-sparta" onclick="postWebtoons()">포스팅하기</a>
+                                    </div>
                                 {% endif %}
+                                <div class="level-item">
                                     <a class="button is-sparta is-outlined"
                                        onclick='$("#modal-post").removeClass("is-active")'>취소</a>
                                 </div>
                             </div>
+
                         </nav>
                     </div>
                 </article>
@@ -286,6 +258,8 @@
                 onclick='$("#modal-post").removeClass("is-active")'></button>
     </div>
 </div>
+
+
 <div class="mycards">
     <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4">
 
