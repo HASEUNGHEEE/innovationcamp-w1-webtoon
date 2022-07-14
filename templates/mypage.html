@@ -113,6 +113,24 @@
         a {
             text-decoration: none;
         }
+
+          {# 스크롤바 스타일 시작 #}
+        body::-webkit-scrollbar {
+            width: 15px; /* 스크롤바의 너비 */
+        }
+
+        body::-webkit-scrollbar-thumb {
+            height: 30%; /* 스크롤바의 길이 */
+            background: hsl(141, 53%, 53%); /* 스크롤바의 색상 */
+
+            border-radius: 10px;
+        }
+
+        body::-webkit-scrollbar-track {
+            background: white; /*스크롤바 뒷 배경 색상*/
+        }
+
+        {# 스크롤바 스타일 끝#}
     </style>
 
 
