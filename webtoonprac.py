@@ -62,31 +62,6 @@ def register_back():
     except jwt.exceptions.DecodeError:
         return render_template('register.html', msg=msg)
 
-@app.route('/update')
-def update_back():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        userinfo = db.t_user.find_one({"user_id": payload["id"]})
-        user_id = userinfo['user_id']
-        return render_template('update.html', user_id=user_id, msg="현재 로그인되어 있습니다.")
-    except jwt.ExpiredSignatureError:
-        return render_template('login.html', msg="로그인 정보가 존재하지 않습니다.")
-    except jwt.exceptions.DecodeError:
-        return render_template('login.html', msg="로그인 정보가 존재하지 않습니다.")
-
-@app.route('/update/save', methods=['POST'])
-def update():
-    email_receive = request.form['email_give']
-    password_receive = request.form['password_give']
-    password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
-    doc = {
-        "user_email": email_receive,
-        "user_pw": password_hash,
-    }
-    db.t_user.update_one(doc)
-    return jsonify({'result': 'success'})
-
 
 @app.route('/login')
 def login():
@@ -150,6 +125,39 @@ def check_dup():
     exists = bool(db.t_user.find_one({"user_id": username_receive}))
     # print(value_receive, type_receive, exists)
     return jsonify({'result': 'success', 'exists': exists})
+
+@app.route('/update')
+def update_back():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        userinfo = db.t_user.find_one({"user_id": payload["id"]})
+        user_id = userinfo['user_id']
+        return render_template('update.html', user_id=user_id, msg="현재 로그인되어 있습니다.")
+    except jwt.ExpiredSignatureError:
+        return render_template('login.html', msg="로그인 시간이 만료되었습니다.")
+    except jwt.exceptions.DecodeError:
+        return render_template('login.html', msg="로그인 정보가 존재하지 않습니다.")
+
+@app.route('/update/save', methods=['POST'])
+def update():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload["id"]
+        email_receive = request.form['email_give']
+        password_receive = request.form['password_give']
+        password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+        doc = {
+            "user_email": email_receive,
+            "user_pw": password_hash
+        }
+        db.t_user.update_one({"user_id": user_id}, {'$set': doc})
+        return jsonify({'result': 'success'})
+    except jwt.ExpiredSignatureError:
+        return render_template('login.html', msg="로그인 시간이 만료되었습니다.")
+    except jwt.exceptions.DecodeError:
+        return render_template('login.html', msg="로그인 정보가 존재하지 않습니다.")
 
 
 # 메인 글쓰기

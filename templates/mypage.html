@@ -118,6 +118,7 @@
 
     <script>
 
+<<<<<<< HEAD
         function logout() {
             $.removeCookie('mytoken', {path: '/'});
             window.location.reload();
@@ -134,6 +135,15 @@
         }
 
 
+=======
+        function login() {
+            window.location.href = "/login"
+        }
+        function logout() {
+            $.removeCookie('mytoken', {path: '/'});
+            window.location.href = "/"
+        }
+>>>>>>> dcc448dda0d943e253c59fd38a4b99f36dbe8f50
         function postWebtoons() {
             let url = $('#url').val()
             let star = $('#star').val()
@@ -149,9 +159,12 @@
                 }
             })
         }
+<<<<<<< HEAD
         function login_notion() {
             alert('로그인 후 이용하실 수 있습니다!')
         }
+=======
+>>>>>>> dcc448dda0d943e253c59fd38a4b99f36dbe8f50
     </script>
 </head>
 <body>
@@ -167,11 +180,14 @@
             <div class="field is-grouped">
                 <p class="control">
                     {% if user_id is defined %}
+<<<<<<< HEAD
                         <div class="name_box">
                             <a href="/mypage/{{ user_id }}">
                                 <button class="bd-tw-button button">{{ user_id }} 마이페이지</button>
                             </a>
                         </div>
+=======
+>>>>>>> dcc448dda0d943e253c59fd38a4b99f36dbe8f50
                         <div class="logout_box">
                             <button class="button is-success" onclick="logout()">로그아웃</button>
                         </div>
@@ -183,6 +199,18 @@
                 </p>
             </div>
         </div>
+{#    </div>#}
+{#    <div class="logout_box">#}
+{#        <button class="button is-success" onclick="logout()">로그아웃</button>#}
+{#    </div>#}
+    {#                <div class="navbar-end">#}
+    {#                    <p class="control">#}
+    {#                        <button onclick="logout()" class="button is-success">#}
+    {#                            <span>로그아웃</span>#}
+    {#                        </button>#}
+    {#                    </p>#}
+    {#                </div>#}
+    </div>
     </div>
 </nav>
 
