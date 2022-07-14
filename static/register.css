@@ -1,0 +1,19 @@
+.notification.is-primary {
+    background-color: white;
+}
+
+.agree_all {
+    margin-bottom: 60px;
+}
+
+.agree_check_box {
+    margin-bottom: 40px;
+}
+
+.agree_box {
+
+}
+
+.notification .title {
+    color: black;
+}
