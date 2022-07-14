@@ -2,12 +2,7 @@
     font-family: 'Noto Sans KR', sans-serif;
 }
 
-.mycards {
-    margin: 80px auto 0px auto;
-    width: 95%;
-    max-width: 900px;
-    object-fit: cover;
-}
+
 
 #post-box {
     width: 500px;
@@ -62,8 +57,20 @@ a {
     width: 600px;
     max-width: 80%;
 }
-
-/*.card h-100 {*/
-/*    width: 125px;*/
-/*    height: 101px;*/
-/*}*/
+.mycards {
+    margin: 80px auto 0px auto;
+    width: 95%;
+    max-width: 1000px;
+    object-fit: cover;
+}
+.box {
+    width: 95%;
+    height: auto;
+    overflow: hidden;
+    border-radius: 10%;
+}
+.box > img {
+    max-width: 150%;
+    height: auto;
+    display: block;
+}
