@@ -201,29 +201,67 @@ def listing():
 
     return jsonify({'webtoons': random_list})
 
+# # 개별 웹툰 페이지
+# @app.route('/detail')
+# def detail():
+#     try:
+#         return render_template('detail.html')
+#     except jwt.ExpiredSignatureError:
+#         return render_template('detail.html')
+#     except jwt.exceptions.DecodeError:
+#         return render_template('detail.html')
 
 # 개별 웹툰페이지로 이동
 @app.route("/detail/<keyword>")
 def info_get(keyword):
-    result = db.t_webtoon.find_one({'name': keyword}, {'_id': False})
-    results = list(db.t_webtoon.find({'name': keyword}, {'_id': False}))
-    return render_template("detail.html", title=keyword, result=result, results=results)
-
-# 마이페이지
-@app.route('/mypage')
-def detail():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         userinfo = db.t_user.find_one({"user_id": payload["id"]})
         user_id = userinfo['user_id']
-        return render_template('mypage.html', user_id=user_id, msg="현재 로그인되어 있습니다.")
+        result = db.t_webtoon.find_one({'name': keyword}, {'_id': False})
+        results = list(db.t_webtoon.find({'name': keyword}, {'_id': False}))
+        return render_template('detail.html', user_id=user_id,  title=keyword, result=result, results=results)
     except jwt.ExpiredSignatureError:
-        return render_template('login.html', msg="로그인 정보가 존재하지 않습니다.")
+        result = db.t_webtoon.find_one({'name': keyword}, {'_id': False})
+        results = list(db.t_webtoon.find({'name': keyword}, {'_id': False}))
+        return render_template('detail.html', title=keyword, result=result, results=results)
     except jwt.exceptions.DecodeError:
-        return render_template('login.html', msg="로그인 정보가 존재하지 않습니다.")
+        result = db.t_webtoon.find_one({'name': keyword}, {'_id': False})
+        results = list(db.t_webtoon.find({'name': keyword}, {'_id': False}))
+        return render_template('detail.html', title=keyword, result=result, results=results)
 
-@app.route("/mypage/<user_id>")
+# 마이페이지
+# @app.route('/mypage')
+# def mypage():
+#     token_receive = request.cookies.get('mytoken')
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         userinfo = db.t_user.find_one({"user_id": payload["id"]})
+#         user_id = userinfo['user_id']
+#         return render_template('mypage.html', user_id=user_id, msg="현재 로그인되어 있습니다.")
+#     except jwt.ExpiredSignatureError:
+#         return render_template('login.html', msg="로그인 정보가 존재하지 않습니다.")
+#     except jwt.exceptions.DecodeError:
+#         return render_template('login.html', msg="로그인 정보가 존재하지 않습니다.")
+
+@app.route("/mypage/<user_page_id>")
+def asdf(user_page_id):
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        userinfo = db.t_user.find_one({"user_id": payload["id"]})
+        user_id = userinfo['user_id']
+        results = list(db.t_webtoon.find({'user_id': user_page_id}, {'_id': False}))
+        return render_template('mypage.html', user_id=user_id, user_page_id=user_page_id, results=results)
+    except jwt.ExpiredSignatureError:
+        results = list(db.t_webtoon.find({'user_id': user_page_id}, {'_id': False}))
+        return render_template('mypage.html', user_page_id=user_page_id, results=results)
+    except jwt.exceptions.DecodeError:
+        results = list(db.t_webtoon.find({'user_id': user_page_id}, {'_id': False}))
+        return render_template('mypage.html', user_page_id=user_page_id, results=results)
+
+
 def masdf(user_id):
     results = list(db.t_webtoon.find({'user_id': user_id}, {'_id': False}))
     return render_template("mypage.html", results=results, user_page_id=user_id)

@@ -1,3 +1,6 @@
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
 
 body {
     margin: 0;
@@ -38,6 +41,7 @@ a:active {
 }
 
 .main {
+    margin-top: 100px;
     display: flex;
     justify-content: center;
 
@@ -93,11 +97,12 @@ a:active {
     box-shadow: 3px 5px 10px 0 gray;
 
     padding: 0 2rem 1rem 2rem;
-    margin: 0 15px 15px 15px;
+    margin: 0 15px 20px 15px;
 
     max-width: 700px;
 }
 
 .user_name {
+    margin-top: 15px;
     font-weight: bold;
 }

@@ -38,7 +38,7 @@
         <script>
             function logout() {
                 $.removeCookie('mytoken', {path: '/'});
-                window.location.href = "/"
+                window.location.reload();
             }
             <!--로그인 페이지로 이동-->
             function login() {
@@ -132,7 +132,11 @@
         <!---------------------- 기록 모달창 ---------------------->
         <div class="mytitle">
             <h1></h1>
+            {% if user_id is defined %}
             <button onclick='$("#modal-post").addClass("is-active")'><h5>기록하기</h5></button>
+            {% else %}
+            <button onclick="login_notion()"><h5>기록하기</h5></button>
+            {% endif %}
             <div class="modal" id="modal-post">
                 <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
                 <div class="modal-content">
