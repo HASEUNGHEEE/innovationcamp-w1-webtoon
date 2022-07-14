@@ -191,6 +191,11 @@
                             <a href="/mypage/{{ user_id }}">
                                 <button class="bd-tw-button button">{{ user_id }} 마이페이지</button>
                             </a>
+
+                            {% else %}
+                            <a href="/update">
+                                <button class="bd-tw-button button">내 정보 수정</button>
+                            </a>
                             {% endif %}
                         </div>
                         <div class="logout_box">
